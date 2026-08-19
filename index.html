@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xcaret — Estimado Agentforce (Flujos Nuvalia)</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* ── Salesforce 2026 — Tight, Bright, Bold ── */
+      --xc-jungle:   #001E5B;
+      --xc-forest:   #022AC0;
+      --xc-leaf:     #066AFE;
+      --xc-leaf-lt:  #EAF5FE;
+      --xc-gold:     #04E1CB;
+      --xc-gold-lt:  #EAF5FE;
+      --xc-earth:    #022AC0;
+      --xc-earth-lt: #EAF5FE;
+      --xc-sky:      #00B3FF;
+      --xc-sky-lt:   #EAF5FE;
+      --xc-coral:    #FF538A;
+      --xc-coral-lt: #FFF0F5;
+      --sf-blue:     #001E5B;
+      --sf-blue-mid: #066AFE;
+      --sf-blue-lt:  #EAF5FE;
+      --border:      #90D0FE;
+      --text:        #001E5B;
+      --muted:       #5A7796;
+      --bg:          #EAF5FE;
+    }
+
+    body {
+      font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ── JUNGLE BACKGROUND DECORATION ── */
+    nav, .page { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      background: #001E5B;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 12px rgba(0,30,91,0.45);
+      border-bottom: 2px solid var(--xc-gold);
+    }
+    .nav-inner {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    /* Logos area — pushed to the right */
+    .nav-logos {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 0.5rem;
+      border-left: 1px solid rgba(4,225,203,0.3);
+      height: 58px;
+    }
+    .nav-logos img, .nav-logos svg {
+      height: 32px;
+      width: auto;
+    }
+    .nav-brand {
+      color: var(--xc-gold);
+      font-family: 'Salesforce Sans', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 0 1.5rem;
+      white-space: nowrap;
+      border-right: 1px solid rgba(4,225,203,0.3);
+      height: 58px;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.03em;
+    }
+    .nav-tabs {
+      display: flex;
+      list-style: none;
+      overflow-x: auto;
+    }
+    .nav-tabs li button {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.75);
+      font-family: 'Salesforce Sans', Arial, sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0 1.25rem;
+      height: 58px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: color .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .nav-tabs li button:hover { color: #fff; }
+    .nav-tabs li button.active {
+      color: var(--xc-gold);
+      border-bottom-color: var(--xc-gold);
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .page-inner {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem 2.5rem 4rem;
+    }
+
+    /* ── TYPOGRAPHY ── */
+    h1 {
+      font-family: 'Salesforce Sans', Arial, sans-serif;
+      font-size: 1.7rem;
+      color: var(--xc-jungle);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+    h2 {
+      font-family: 'Salesforce Sans', Arial, sans-serif;
+      font-size: 1.22rem;
+      color: var(--xc-jungle);
+      margin: 2rem 0 0.9rem;
+    }
+    h3 { font-size: 1rem; color: var(--xc-forest); font-weight: 700; margin: 1.4rem 0 0.6rem; }
+    h4 { font-size: 0.92rem; color: var(--xc-jungle); font-weight: 700; margin: 1rem 0 0.4rem; }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-block;
+      background: var(--xc-jungle);
+      color: #fff;
+      padding: 0.18rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+    .badge-dc  { background: var(--xc-sky); }
+    .badge-diff{ background: var(--xc-earth); }
+    .badge-q   { background: var(--xc-forest); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--xc-gold-lt);
+      border-left: 4px solid var(--xc-gold);
+      padding: 0.9rem 1.1rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.88rem;
+      margin: 1.4rem 0;
+    }
+    .callout strong { color: var(--xc-earth); }
+
+    .insight {
+      background: var(--xc-leaf-lt);
+      border: 1px solid #a8d5b8;
+      padding: 0.9rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin: 1.2rem 0;
+    }
+    .insight-dc {
+      background: var(--xc-sky-lt);
+      border-color: #80cdd4;
+    }
+    .insight-green {
+      background: var(--xc-leaf-lt);
+      border-color: #88d4a8;
+    }
+
+    /* ── DIVIDER ── */
+    hr.div {
+      border: none;
+      border-top: 2px dashed var(--border);
+      margin: 2.2rem 0;
+    }
+
+    /* ── TABLES ── */
+    .tbl-wrap { overflow-x: auto; margin-bottom: 1.4rem; }
+    .tbl-wrap.tbl-wrap-visible { overflow: visible; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+
+    /* ── INFO ICON TOOLTIP ── */
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: var(--xc-leaf);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 700;
+      font-style: italic;
+      font-family: Georgia, 'Times New Roman', serif;
+      margin-left: 6px;
+      cursor: help;
+      position: relative;
+      vertical-align: middle;
+    }
+    .info-icon .info-tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      top: 135%;
+      left: 0;
+      z-index: 50;
+      width: 320px;
+      max-width: 80vw;
+      background: #fff;
+      color: var(--xc-jungle);
+      border: 1.5px solid var(--xc-leaf);
+      border-radius: 10px;
+      padding: 0.8rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 400;
+      font-style: normal;
+      line-height: 1.45;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      transition: opacity .15s ease;
+      text-align: left;
+      white-space: normal;
+    }
+    .info-icon:hover .info-tooltip,
+    .info-icon:focus .info-tooltip { visibility: visible; opacity: 1; }
+    th {
+      background: var(--xc-jungle);
+      color: #fff;
+      padding: 0.65rem 0.9rem;
+      text-align: left;
+      font-weight: 700;
+      font-family: 'Salesforce Sans', Arial, sans-serif;
+    }
+    td { padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:hover td { background: #EAF5FE; }
+
+    .tbl-green th  { background: var(--xc-forest); }
+    .tbl-purple th { background: var(--xc-sky); }
+    .tbl-navy th   { background: #022AC0; }
+    .tbl-amber th  { background: var(--xc-earth); }
+    .tbl-teal th   { background: #066AFE; }
+
+    .hl-green td   { background: var(--xc-leaf-lt); font-weight: 700; }
+    .hl-blue td    { background: var(--xc-sky-lt); font-weight: 700; }
+
+    .cr { color: var(--xc-forest); font-weight: 700; }
+    .cr-blue { color: #022AC0; font-weight: 700; }
+    .free { color: var(--muted); font-style: italic; }
+    details.anexo { margin-top: 2.5rem; border-top: 2px dashed var(--muted); padding-top: 1rem; }
+    details.anexo summary { cursor: pointer; font-family: 'Salesforce Sans', Arial, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--muted); user-select: none; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+    details.anexo summary::before { content: '▶'; font-size: 0.8rem; transition: transform 0.2s; }
+    details.anexo[open] summary::before { transform: rotate(90deg); }
+    details.anexo summary::-webkit-details-marker { display: none; }
+    details.anexo .anexo-body { margin-top: 1rem; }
+    .tag-a { color: #022AC0; font-weight: 700; }
+    .tag-b { color: var(--xc-sky); font-weight: 700; }
+    .tag-c { color: var(--xc-coral); font-weight: 700; }
+    .tag-both { color: var(--xc-forest); font-weight: 700; }
+
+    /* ── TOTAL BOX ── */
+    .total-box {
+      background: linear-gradient(135deg, var(--xc-jungle) 0%, #022AC0 100%);
+      color: #fff;
+      padding: 1.4rem 1.6rem;
+      border-radius: 12px;
+      margin: 1.8rem 0;
+      border: 1px solid var(--xc-gold);
+      box-shadow: 0 4px 16px rgba(0,30,91,0.25);
+    }
+    .total-box h3 { color: var(--xc-gold); margin: 0 0 0.8rem; font-family: 'Salesforce Sans', Arial, sans-serif; }
+    .total-box table { color: #fff; }
+    .total-box th { background: rgba(255,255,255,0.14); color: #fff; }
+    .total-box td { border-bottom-color: rgba(255,255,255,0.12); }
+    .total-box .cr { color: #04E1CB; }
+
+    /* ── DIAGRAM ── */
+    .diagram-wrap {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,30,91,0.10);
+    }
+    .diagram-wrap img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+    .diagram-caption {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ── DIAGRAM HOTSPOTS ── */
+    .diagram-container {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+    }
+    .diagram-container img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      cursor: zoom-in;
+    }
+
+    /* ── LIGHTBOX ── */
+    #lb-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(0,0,0,0.82);
+      backdrop-filter: blur(4px);
+      overflow: auto;
+      cursor: zoom-out;
+    }
+    #lb-overlay.open { display: flex; align-items: flex-start; justify-content: center; padding: 2rem; }
+    #lb-inner {
+      position: relative;
+      cursor: default;
+      max-width: min(96vw, 1400px);
+      width: 100%;
+    }
+    #lb-inner img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.6);
+      user-select: none;
+    }
+    #lb-close {
+      position: fixed;
+      top: 1rem;
+      right: 1.25rem;
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: #fff;
+      font-size: 1.6rem;
+      line-height: 1;
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+      z-index: 9100;
+    }
+    #lb-close:hover { background: rgba(255,255,255,0.28); }
+    /* Hotspots inside lightbox */
+    #lb-inner .hs {
+      /* inherit from .hs — already defined */
+    }
+    #lb-inner .hs .tip {
+      font-size: 0.85rem;
+      min-width: 260px;
+      max-width: 360px;
+    }
+    .hs {
+      position: absolute;
+      cursor: pointer;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      transition: background .15s, border-color .15s;
+      z-index: 10;
+    }
+    .hs:hover {
+      background: rgba(0,30,91,0.18);
+      border-color: rgba(0,30,91,0.5);
+    }
+    /* Tooltip */
+    .hs .tip {
+      display: none;
+      position: fixed;
+      background: var(--xc-jungle);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      min-width: 220px;
+      max-width: 300px;
+      white-space: normal;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      pointer-events: none;
+      z-index: 99999;
+      border: 1px solid var(--xc-gold);
+    }
+    .hs .tip::after {
+      content: '';
+      position: absolute;
+      border: 6px solid transparent;
+    }
+    /* Arrow pointing up (tooltip below hotspot) */
+    .hs .tip.dir-down::after {
+      bottom: 100%;
+      left: 20px;
+      border-bottom-color: var(--xc-jungle);
+    }
+    /* Arrow pointing down (tooltip above hotspot) — default */
+    .hs .tip.dir-up::after {
+      top: 100%;
+      left: 20px;
+      border-top-color: var(--xc-jungle);
+    }
+
+    .tip-hu { font-weight: 700; color: var(--xc-gold); font-size: 0.82rem; }
+    .tip-action { color: #90D0FE; font-size: 0.78rem; margin: 0.2rem 0; }
+    .tip-cost { font-size: 0.75rem; margin-top: 0.3rem; }
+    .tip-cost .free { color: #fca5a5; font-style: italic; }
+    .tip-cost .paid { color: #04E1CB; font-weight: 700; }
+    /* Pinned tooltip stays visible and accepts pointer events */
+    .hs.pinned .tip { display: block !important; pointer-events: auto; }
+    .hs.pinned { background: rgba(0,30,91,0.28); border-color: rgba(4,225,203,0.7); }
+    /* Links inside tooltip */
+    .tip-links { margin-top: 0.45rem; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 0.35rem; }
+    .tip-link {
+      display: inline-block;
+      color: #04E1CB;
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+    .tip-link:hover { color: #fff; }
+    /* Brief highlight on the target table row after navigation */
+    @keyframes rowFlash {
+      0%   { background: rgba(0,179,255,0.25); }
+      100% { background: transparent; }
+    }
+    tr.row-highlight { animation: rowFlash 2s ease-out forwards; }
+
+    /* ── PROJECTION TABLE ── */
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+    .proj-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,30,91,0.08);
+    }
+    .proj-card .vol { font-size: 1.1rem; font-weight: 700; color: var(--xc-jungle); }
+    .proj-card .lbl { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .proj-card .val { font-size: 1.3rem; font-weight: 700; color: var(--xc-forest); }
+    .proj-card .sub { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── DIFF PAGE ── */
+    .diff-row-canvas td:nth-child(2) { background: var(--xc-leaf-lt); }
+    .diff-row-html   td:nth-child(3) { background: var(--xc-gold-lt); }
+    .tag-canvas { color: var(--xc-forest); font-weight: 700; }
+    .tag-html   { color: var(--xc-earth); font-weight: 700; }
+
+    /* ── QUESTIONS PAGE ── */
+    .q-group {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.4rem;
+      box-shadow: 0 2px 8px rgba(0,30,91,0.07);
+    }
+    .q-group h3 { color: var(--xc-jungle); margin-top: 0; }
+    .q-list { list-style: none; padding: 0; margin-top: 0.8rem; }
+    .q-list li {
+      padding: 0.55rem 0 0.55rem 1.4rem;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .q-list li:last-child { border-bottom: none; }
+    .q-list li::before {
+      content: "?";
+      position: absolute;
+      left: 0;
+      color: var(--xc-gold);
+      font-weight: 700;
+    }
+    .q-why {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      font-style: italic;
+    }
+
+    /* ── MASCOT ── */
+    .mascot-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+    .mascot-wrap svg, .mascot-wrap img { flex-shrink: 0; }
+    .mascot-bubble {
+      background: var(--xc-leaf-lt);
+      border: 1.5px solid var(--xc-leaf);
+      border-radius: 12px 12px 12px 2px;
+      padding: 0.7rem 1rem;
+      font-size: 0.86rem;
+      color: var(--xc-jungle);
+      font-weight: 600;
+      max-width: 420px;
+      position: relative;
+    }
+    .mascot-bubble::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      bottom: 10px;
+      border: 5px solid transparent;
+      border-right-color: var(--xc-leaf);
+    }
+    .mascot-bubble::after {
+      content: '';
+      position: absolute;
+      left: -8px;
+      bottom: 11px;
+      border: 4px solid transparent;
+      border-right-color: var(--xc-leaf-lt);
+    }
+
+    /* ── CORNER LEAVES (per page) ── */
+    .page-inner {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ NAV ══════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">Agentforce · Estimación</div>
+    <ul class="nav-tabs">
+      <li><button class="active" onclick="showPage('p1',this)">Flujo 1 — Fotografías</button></li>
+      <li><button onclick="showPage('p2',this)">Flujo 2 — Pickup</button></li>
+      <li><button onclick="showPage('p4',this)">Preguntas Pendientes</button></li>
+    </ul>
+    <!-- Logos: Xcaret + Salesforce side by side, same height -->
+    <div class="nav-logos">
+      <!-- Xcaret logo oficial -->
+      <img src="assets/logo xcaret oficial.svg" alt="Xcaret" style="height:32px;width:auto;">
+      <span style="width:1px;height:28px;background:rgba(4,225,203,0.4);display:inline-block;"></span>
+      <!-- Salesforce Corporate Logo -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 205.73 144" height="32" aria-label="Salesforce">
+        <defs><style>.sf-cls-1{fill-rule:evenodd}.sf-cls-1,.sf-cls-2{fill:#fff}.sf-cls-3{fill:#00b3ff}</style></defs>
+        <g>
+          <path class="sf-cls-3" d="M85.62,15.71c6.64-6.91,15.87-11.2,26.09-11.2,13.58,0,25.43,7.57,31.74,18.81,5.49-2.45,11.56-3.82,17.94-3.82,24.49,0,44.35,20.03,44.35,44.74s-19.86,44.74-44.35,44.74c-2.99,0-5.91-.3-8.74-.87-5.56,9.91-16.15,16.61-28.3,16.61-5.09,0-9.9-1.17-14.18-3.27-5.63,13.25-18.75,22.54-34.05,22.54s-29.5-10.08-34.71-24.21c-2.28.48-4.64.73-7.06.73C15.38,120.52,0,104.99,0,85.83c0-12.84,6.91-24.05,17.17-30.05-2.12-4.87-3.29-10.23-3.29-15.87C13.89,17.87,31.78,0,53.85,0c12.96,0,24.47,6.16,31.77,15.71Z"/>
+          <path class="sf-cls-2" d="M29.81,74.68c-.13.34.05.41.09.47.39.28.78.48,1.17.71,2.09,1.11,4.08,1.44,6.15,1.44,4.22,0,6.84-2.25,6.84-5.86v-.07c0-3.34-2.96-4.56-5.73-5.44l-.36-.11c-2.09-.68-3.9-1.27-3.9-2.65v-.07c0-1.18,1.06-2.05,2.69-2.05,1.82,0,3.97.6,5.36,1.37,0,0,.41.26.56-.13.08-.21.79-2.11.85-2.31.08-.22-.06-.39-.2-.48-1.59-.97-3.78-1.63-6.05-1.63h-.42c-3.86,0-6.56,2.34-6.56,5.68v.07c0,3.52,2.98,4.67,5.76,5.47l.45.14c2.03.62,3.78,1.16,3.78,2.59v.07c0,1.31-1.14,2.28-2.97,2.28-.71,0-2.99-.02-5.43-1.56-.29-.17-.47-.29-.7-.44-.12-.08-.42-.2-.55.19l-.83,2.31v.02Z"/>
+          <path class="sf-cls-2" d="M91.59,74.68c-.13.34.05.41.09.47.39.28.78.48,1.17.71,2.1,1.11,4.08,1.44,6.15,1.44,4.22,0,6.84-2.25,6.84-5.86v-.07c0-3.34-2.96-4.56-5.73-5.44l-.36-.11c-2.09-.68-3.9-1.27-3.9-2.65v-.07c0-1.18,1.06-2.05,2.69-2.05,1.81,0,3.97.6,5.36,1.37,0,0,.41.26.56-.13.08-.21.79-2.11.85-2.31.08-.22-.06-.39-.2-.48-1.59-.97-3.78-1.63-6.05-1.63h-.42c-3.86,0-6.56,2.34-6.56,5.68v.07c0,3.52,2.98,4.67,5.76,5.47l.45.14c2.03.62,3.78,1.16,3.78,2.59v.07c0,1.31-1.14,2.28-2.97,2.28-.71,0-2.99-.02-5.44-1.56-.29-.17-.47-.29-.7-.44-.08-.05-.43-.19-.55.19l-.83,2.31v.02Z"/>
+          <path class="sf-cls-2" d="M137.29,63.81c-.35-1.17-.88-2.2-1.6-3.06-.72-.86-1.63-1.56-2.71-2.06-1.07-.51-2.34-.76-3.77-.76s-2.7.26-3.78.76c-1.07.5-1.99,1.19-2.71,2.06-.72.86-1.25,1.89-1.6,3.06-.35,1.16-.52,2.43-.52,3.79s.17,2.62.52,3.79c.35,1.17.88,2.2,1.6,3.06.72.86,1.63,1.55,2.71,2.04,1.08.49,2.35.74,3.78.74s2.7-.25,3.77-.74c1.07-.49,1.99-1.18,2.71-2.04s1.25-1.89,1.6-3.06c.35-1.16.52-2.43.52-3.79s-.17-2.62-.52-3.79ZM133.76,67.59c0,2.04-.38,3.65-1.13,4.79-.74,1.13-1.87,1.67-3.43,1.67s-2.68-.54-3.42-1.67c-.74-1.13-1.11-2.75-1.11-4.79s.38-3.64,1.11-4.77c.73-1.12,1.85-1.66,3.42-1.66s2.68.54,3.43,1.66c.75,1.13,1.13,2.73,1.13,4.77Z"/>
+          <path class="sf-cls-1" d="M166.21,73.51c-.11-.34-.45-.21-.45-.21-.51.2-1.06.38-1.64.47-.59.09-1.24.14-1.93.14-1.7,0-3.06-.51-4.03-1.51-.98-1.01-1.52-2.62-1.51-4.82,0-2,.49-3.49,1.35-4.64.85-1.13,2.17-1.72,3.91-1.72,1.45,0,2.56.17,3.73.54,0,0,.27.12.41-.24.31-.85.54-1.47.87-2.4.09-.27-.14-.39-.22-.42-.45-.18-1.53-.47-2.35-.6-.76-.11-1.65-.17-2.65-.17-1.48,0-2.8.25-3.93.76-1.13.5-2.08,1.19-2.83,2.06-.76.86-1.33,1.89-1.72,3.06-.39,1.16-.57,2.44-.57,3.79,0,2.93.79,5.28,2.34,7.01,1.56,1.74,3.9,2.62,6.95,2.62,1.81,0,3.66-.36,4.99-.89,0,0,.26-.12.14-.42l-.86-2.39h0Z"/>
+          <path class="sf-cls-1" d="M184.24,63.15c-.3-1.13-1.04-2.27-1.53-2.79-.77-.82-1.52-1.41-2.27-1.72-.98-.42-2.14-.7-3.42-.7-1.49,0-2.84.25-3.94.76-1.1.51-2.02,1.22-2.74,2.09-.73.88-1.27,1.91-1.62,3.1-.35,1.17-.52,2.46-.52,3.8s.18,2.65.54,3.81c.36,1.16.94,2.18,1.73,3.03.79.85,1.79,1.52,3,1.99,1.2.46,2.65.7,4.32.7,3.45,0,5.26-.78,6.01-1.19.14-.08.26-.2.1-.57l-.78-2.18c-.12-.33-.45-.21-.45-.21-.85.32-2.06.88-4.9.88-1.85,0-3.22-.55-4.08-1.41-.88-.87-1.32-2.15-1.38-3.97h11.92s.32,0,.35-.3c.02-.13.41-2.45-.36-5.13h0ZM172.38,65.64c.17-1.13.48-2.08.96-2.81.73-1.12,1.84-1.73,3.41-1.73s2.6.61,3.34,1.73c.49.73.7,1.72.79,2.81h-8.5,0Z"/>
+          <path class="sf-cls-1" d="M88.74,63.15c-.3-1.13-1.04-2.27-1.53-2.79-.77-.82-1.52-1.41-2.27-1.72-.98-.42-2.14-.7-3.42-.7-1.49,0-2.84.25-3.94.76-1.1.51-2.02,1.22-2.74,2.09-.73.88-1.27,1.91-1.62,3.1-.35,1.17-.52,2.46-.52,3.8s.18,2.65.54,3.81c.36,1.16.94,2.18,1.72,3.03.79.85,1.79,1.52,3,1.99,1.2.46,2.65.7,4.33.7,3.45,0,5.26-.78,6.01-1.19.13-.08.26-.2.1-.57l-.78-2.18c-.12-.33-.45-.21-.45-.21-.85.32-2.06.88-4.9.88-1.84,0-3.22-.55-4.08-1.41-.88-.87-1.32-2.15-1.38-3.97h11.92s.32,0,.35-.3c.02-.13.41-2.45-.36-5.13ZM76.88,65.64c.17-1.13.48-2.08.96-2.81.73-1.12,1.84-1.73,3.41-1.73s2.6.61,3.34,1.73c.49.73.7,1.72.79,2.81h-8.5,0Z"/>
+          <path class="sf-cls-2" d="M55.85,65.07c-.48-.04-1.11-.05-1.86-.05-1.02,0-2.01.13-2.93.38-.93.25-1.77.64-2.49,1.16-.73.52-1.31,1.18-1.73,1.97-.42.79-.64,1.71-.64,2.75s.18,1.97.54,2.72c.36.76.88,1.38,1.56,1.87.67.48,1.48.84,2.43,1.05.94.21,2,.33,3.16.33,1.22,0,2.44-.11,3.62-.3,1.17-.2,2.61-.49,3-.58.4-.09.84-.21.84-.21.29-.08.27-.39.27-.39v-10.91c0-2.39-.64-4.16-1.9-5.26-1.25-1.1-3.09-1.65-5.48-1.65-.89,0-2.34.12-3.2.29,0,0-2.6.51-3.67,1.35,0,0-.23.14-.11.48l.85,2.27c.11.29.39.2.39.2,0,0,.09-.04.2-.1,2.29-1.25,5.19-1.21,5.19-1.21,1.28,0,2.28.26,2.95.77.65.5.98,1.25.98,2.84v.51c-1.02-.15-1.97-.23-1.97-.23v-.02ZM51.1,73.45c-.47-.37-.54-.47-.69-.71-.23-.36-.36-.88-.36-1.55,0-1.04.35-1.8,1.07-2.31,0,0,1.03-.89,3.46-.86,1.71.02,3.24.27,3.24.27v5.42s-1.51.32-3.22.43c-2.43.14-3.5-.7-3.49-.7h0Z"/>
+          <path class="sf-cls-1" d="M152.02,58.92c.09-.27-.1-.4-.18-.43-.2-.08-1.22-.29-2-.34-1.5-.09-2.33.16-3.08.49-.74.33-1.56.87-2.02,1.49v-1.45c0-.2-.14-.36-.34-.36h-3.05c-.2,0-.34.16-.34.36v17.79c0,.2.16.36.36.36h3.14c.2,0,.36-.16.36-.36v-8.88c0-1.19.14-2.38.39-3.13.26-.74.61-1.33,1.04-1.75.43-.42.93-.72,1.47-.88.55-.17,1.16-.23,1.6-.23.62,0,1.31.16,1.31.16.23.02.36-.11.44-.33.2-.54.79-2.18.9-2.5h-.02Z"/>
+          <path class="sf-cls-1" d="M122.62,50.68c-.38-.12-.73-.2-1.18-.28-.46-.08-1.01-.13-1.62-.13-2.15,0-3.86.61-5.05,1.81-1.19,1.19-2,3.02-2.4,5.4l-.14.81h-2.71s-.33-.02-.4.35l-.45,2.48c-.03.23.07.39.39.39h2.63l-2.68,14.92c-.21,1.2-.45,2.19-.71,2.94-.26.74-.52,1.29-.83,1.69-.3.39-.6.67-1.09.85-.41.14-.88.2-1.41.2-.29,0-.67-.05-.96-.11-.28-.05-.43-.12-.64-.21,0,0-.31-.12-.43.19-.1.25-.8,2.18-.88,2.43-.08.23.04.42.18.48.35.13.61.2,1.09.32.67.16,1.22.17,1.75.17,1.1,0,2.1-.15,2.93-.45.84-.3,1.56-.82,2.21-1.53.7-.77,1.13-1.57,1.55-2.67.42-1.09.76-2.43,1.05-4.01l2.68-15.2h3.93s.33.02.4-.35l.45-2.48c.03-.23-.07-.39-.39-.39h-3.81c.02-.08.19-1.43.63-2.69.19-.54.54-.98.84-1.27.29-.29.63-.5,1-.62.38-.12.81-.18,1.28-.18.36,0,.71.05.98.1.37.08.51.12.61.15.39.12.44,0,.51-.18l.91-2.5c.09-.27-.14-.39-.22-.42h0Z"/>
+          <path class="sf-cls-1" d="M69.35,76.47c0,.2-.14.36-.34.36h-3.16c-.2,0-.34-.16-.34-.36v-25.45c0-.2.14-.36.34-.36h3.16c.2,0,.34.16.34.36v25.45Z"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 1 — FLUJO 1: FOTOGRAFÍAS DE VISITA
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="p1" class="page active">
+<div class="page-inner">
+
+  <h1>Flujo 1 — Soporte de Fotografías de Visita</h1>
+  <p class="subtitle">
+    <span class="badge">Agentforce</span>
+    <span class="badge badge-dc">Data Cloud</span>
+    Estimado del equipo de Consumption Leads con base en flujos compartidos por Nuvalia para Xcaret
+  </p>
+
+  <!-- DIAGRAM -->
+  <div class="diagram-wrap">
+    <div class="diagram-container" id="diag1">
+      <img src="flujo1.png" alt="Diagrama Flujo 1 — Soporte Fotografías de Visita">
+
+      <!-- HU50+51+58: clasificación + query CRM, box superior izquierdo -->
+      <div class="hs tip-right" style="left:6%;top:12%;width:18%;height:14%;" data-rows="row-HU50,row-HU51,row-HU58">
+        <div class="tip">
+          <div class="tip-hu">HU50 · HU51 · HU58</div>
+          <div class="tip-action">🔵 Standard Agent Action — clasificación de intención + consulta de casos previos en CRM</div>
+          <div class="tip-cost"><span class="paid">2 acciones · 40 cr prod / 32 cr sandbox</span></div>
+          <div class="tip-action" style="margin-top:0.3rem">HU58 = lógica condicional sobre resultado → <span class="free">0 cr adicional</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU50">HU50 en tabla ↓</a> <a class="tip-link" data-row="row-HU51">HU51 ↓</a> <a class="tip-link" data-row="row-HU58">HU58 ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU52: Path A – respuesta si caso existe -->
+      <div class="hs tip-left" style="left:60%;top:7%;width:14%;height:12%;" data-rows="row-HU52">
+        <div class="tip">
+          <div class="tip-hu">HU52 — Camino A (caso existe)</div>
+          <div class="tip-action">Respuesta en el mismo turno del LLM (no es acción separada)</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr</span></div>
+          <div class="tip-action">Camino: 🟩 Solo Camino A</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU52">Ver HU52 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU53: Path B – Knowledge search -->
+      <div class="hs tip-right" style="left:4%;top:47%;width:14%;height:12%;" data-rows="row-HU53">
+        <div class="tip">
+          <div class="tip-hu">HU53 — Camino B</div>
+          <div class="tip-action">🔵 Standard Agent Action — búsqueda en base de conocimiento (Knowledge)</div>
+          <div class="tip-cost"><span class="paid">1 acción · 20 cr prod / 16 cr sandbox</span></div>
+          <div class="tip-action">Camino: 🟨 Solo Camino B</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU53">Ver HU53 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU54: Path B – Crear caso -->
+      <div class="hs" style="left:22%;top:47%;width:14%;height:12%;" data-rows="row-HU54">
+        <div class="tip">
+          <div class="tip-hu">HU54 — Camino B</div>
+          <div class="tip-action">🔵 Standard Agent Action — crear registro de caso en Salesforce</div>
+          <div class="tip-cost"><span class="paid">1 acción · 20 cr prod / 16 cr sandbox</span></div>
+          <div class="tip-action">Camino: 🟨 Solo Camino B</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU54">Ver HU54 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU55: Path B – asignación a cola/Flow background -->
+      <div class="hs" style="left:40%;top:47%;width:14%;height:12%;" data-rows="row-HU55">
+        <div class="tip">
+          <div class="tip-hu">HU55 — Camino B</div>
+          <div class="tip-action">Automatización en background (Flow / Assignment Rule)</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (no es acción Agentforce)</span></div>
+          <div class="tip-action">Camino: 🟨 Solo Camino B</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU55">Ver HU55 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU56: Path B – confirmación número de caso -->
+      <div class="hs tip-left" style="left:58%;top:47%;width:14%;height:12%;" data-rows="row-HU56">
+        <div class="tip">
+          <div class="tip-hu">HU56 — Camino B</div>
+          <div class="tip-action">Respuesta en el mismo turno del LLM (no es acción separada)</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr</span></div>
+          <div class="tip-action">Camino: 🟨 Solo Camino B</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU56">Ver HU56 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU57+60: logging de sesión (barra inferior) -->
+      <div class="hs" style="left:28%;top:62%;width:18%;height:10%;" data-rows="row-HU57">
+        <div class="tip">
+          <div class="tip-hu">HU57 · HU60</div>
+          <div class="tip-action">Logging de sesión / trazabilidad — operación interna del agente</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU57">Ver HU57/60 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU61: Transferencia a humano -->
+      <div class="hs" style="left:15%;top:74%;width:16%;height:12%;" data-rows="row-HU61">
+        <div class="tip">
+          <div class="tip-hu">HU61 — Transferencia a Humano</div>
+          <div class="tip-action">🔵 Standard Agent Action — handoff a agente humano</div>
+          <div class="tip-cost"><span class="paid">+1 acción · +20 cr prod / +16 cr sandbox (si aplica)</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos (condicional)</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU61">Ver HU61 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU59: Guardrail (nota inferior izquierda) -->
+      <div class="hs tip-right" style="left:1%;top:52%;width:10%;height:10%;" data-rows="row-HU59">
+        <div class="tip">
+          <div class="tip-hu">HU59 — Guardrail del Topic</div>
+          <div class="tip-action">Comportamiento del agente: modo informativo, sin envío automático de archivos</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (no es acción facturable)</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU59">Ver HU59 en tabla ↓</a></div>
+        </div>
+      </div>
+    </div>
+    <p class="diagram-caption">Diagrama de flujo compartido por Nuvalia (2026-07-20) · Pasa sobre cada nodo para ver la acción Agentforce</p>
+  </div>
+
+  <hr class="div">
+
+  <!-- SECTION 1: RESUMEN POR CAMINO -->
+  <h2>1. Resumen por Camino</h2>
+
+  <div class="tbl-wrap">
+  <table class="tbl-green">
+    <thead>
+      <tr>
+        <th>Escenario</th>
+        <th>HUs con acción facturable</th>
+        <th>Acciones</th>
+        <th>Créditos Prod</th>
+        <th>Créditos Sandbox</th>
+        <th>Data Service Credits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Camino A — Caso previo existe</strong></td>
+        <td>HU50, HU51</td>
+        <td>2</td>
+        <td class="cr">40</td><td class="cr">32</td>
+        <td>—<br><span style="font-size:0.78rem;color:var(--muted);">Sin HU53, sin RAG</span></td>
+      </tr>
+      <tr>
+        <td><strong>Camino A + escalación (HU61)</strong></td>
+        <td>HU50, HU51, HU61</td>
+        <td>3</td>
+        <td class="cr">60</td><td class="cr">48</td>
+        <td>—<br><span style="font-size:0.78rem;color:var(--muted);">Sin HU53, sin RAG</span></td>
+      </tr>
+      <tr>
+        <td><strong>Camino B — Sin caso previo</strong></td>
+        <td>HU50, HU51, HU53, HU54</td>
+        <td>4</td>
+        <td class="cr">80</td><td class="cr">64</td>
+        <td class="cr-blue">~2 cr / M filas<br><span style="font-size:0.78rem;color:var(--muted);">Data Queries vía HU53</span></td>
+      </tr>
+      <tr>
+        <td><strong>Camino B + escalación (HU61)</strong></td>
+        <td>HU50, HU51, HU53, HU54, HU61</td>
+        <td>5</td>
+        <td class="cr">100</td><td class="cr">80</td>
+        <td class="cr-blue">~2 cr / M filas<br><span style="font-size:0.78rem;color:var(--muted);">Data Queries vía HU53</span></td>
+      </tr>
+      <tr class="hl-green">
+        <td><strong>Estimación blended (~3 acciones promedio)</strong></td>
+        <td>Ponderado 50% A · 40% B · 10% escalación</td>
+        <td>~3</td>
+        <td class="cr">~60</td><td class="cr">~48</td>
+        <td class="cr-blue" style="font-size:0.82rem;">~2 cr / M filas<br><span style="font-size:0.78rem;color:var(--muted);">Solo en ~50% de las conversaciones (Camino B)</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="insight">
+    <strong>Lógica blended:</strong>
+    Se asume ~50 % Camino A (caso previo encontrado, 2 acciones · 40 cr), ~40 % Camino B (caso nuevo, 4 acciones · 80 cr) y ~10 % escalación (+1 acción · +20 cr).
+    Promedio ponderado: <strong>~3 acciones · ~60 créditos prod por conversación</strong>.
+  </div>
+
+  <div class="callout">
+    <strong>Tasa de conversión:</strong> 20 créditos por acción en producción · 16 créditos por acción en sandbox.
+  </div>
+
+  <!-- SECTION 2: PATHS DETALLADOS -->
+  <h2>2. Paths Detallados</h2>
+
+  <h3>Path A — Caso previo encontrado (2 acciones + handoff opcional)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Identificar intención (topic classification)</td><td>HU50</td><td>—</td></tr>
+      <tr><td>2</td><td>Consultar casos previos del cliente en Salesforce (resultado: existe)</td><td>HU51 + HU58</td><td>—</td></tr>
+      <tr><td>—</td><td>Informar estatus del caso (texto en mismo turno, sin costo)</td><td>HU52</td><td>—</td></tr>
+      <tr><td>+3 opcional</td><td>Transferencia a humano (si aplica)</td><td>HU61</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Path B — Sin caso previo, crear nuevo (4 acciones + handoff opcional)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Identificar intención</td><td>HU50</td><td>—</td></tr>
+      <tr><td>2</td><td>Consultar casos previos (resultado: no existe)</td><td>HU51 + HU58</td><td>—</td></tr>
+      <tr><td>3</td><td>Buscar respuesta en knowledge base</td><td>HU53</td><td><span class="cr-blue">~2 cr / M filas<br><span style="font-size:0.78rem;font-weight:400;">Data Queries · solo Camino B</span></span></td></tr>
+      <tr><td>4</td><td>Crear caso + asignar a cola + tipificar + registrar trazabilidad (un solo Flow)</td><td>HU54 + HU55 + HU57 + HU60</td><td>—</td></tr>
+      <tr><td>—</td><td>Informar número de solicitud (texto en mismo turno, sin costo)</td><td>HU56</td><td>—</td></tr>
+      <tr><td>+5 opcional</td><td>Transferencia a humano (si aplica)</td><td>HU61</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <hr class="div">
+
+  <!-- SECTION 3: ACCIONES -->
+  <h2>3. Acciones Agentforce por HU</h2>
+
+  <!-- Einstein mascot explaining the table -->
+  <div class="mascot-wrap">
+    <img src="assets/EINSTEIN_Coat_WaveRight_SFS20_sRGB%201.png" alt="Einstein mascot" style="height:110px;width:auto;">
+    <div class="mascot-bubble">
+      ¡Hola! Soy <strong>Einstein</strong>. Cada fila aquí muestra las Historias de Usuario que consumen una <em>Acción Agentforce</em> — y por qué. El código de colores indica que parte del flujo se ejecuta.
+    </div>
+  </div>
+
+  <p style="font-size:0.88rem; margin-bottom:1rem; color:var(--muted);">
+    Columna «Camino»: 🟦 Ambos caminos &nbsp;·&nbsp; 🟩 Solo Camino A (caso previo existe) &nbsp;·&nbsp; 🟨 Solo Camino B (sin caso previo)
+  </p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>HU</th>
+        <th>Descripción</th>
+        <th>Paso del diagrama</th>
+        <th>Tipo de acción</th>
+        <th>Créd. Prod</th>
+        <th>Créd. Sandbox</th>
+        <th>Camino</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="row-HU50">
+        <td>HU50</td>
+        <td>Es acción de Agentforce porque cada invocación de razonamiento/tópico del agente cuenta como 1 acción estándar, sin importar el resultado.</td>
+        <td>Detectar intención de fotografía</td>
+        <td>Standard Agent Action (clasificación)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-both">🟦 Ambos</td>
+      </tr>
+      <tr id="row-HU51">
+        <td>HU51</td>
+        <td>"Query CRM" significa que el agente consulta directamente el objeto Case de Salesforce (SOQL/Flow), no un DMO de Data Service Credits — se factura como acción estándar.</td>
+        <td>Consultar casos previos en Salesforce</td>
+        <td>Standard Agent Action (query CRM)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-both">🟦 Ambos</td>
+      </tr>
+      <tr id="row-HU53">
+        <td>HU53</td>
+        <td>"Knowledge" significa que el agente busca/recupera contenido en la base de conocimiento de Salesforce — sí es invocación de herramienta, por eso se factura.</td>
+        <td>Responder con info base (si no existe caso)</td>
+        <td>Standard Agent Action (Knowledge)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-b">🟨 Camino B</td>
+      </tr>
+      <tr id="row-HU54">
+        <td>HU54</td>
+        <td>"Create record" implica una operación DML (crear un Case) vía Flow/Apex Action — cualquier acción que modifique datos se factura como acción estándar.</td>
+        <td>Crear nuevo caso tipo Fotografía</td>
+        <td>Standard Agent Action (create record)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-b">🟨 Camino B</td>
+      </tr>
+      <tr id="row-HU61">
+        <td>HU61</td>
+        <td>"Handoff" es una acción explícita del agente para escalar a un humano — se factura como acción estándar, aplica en ambos caminos si hay escalación.</td>
+        <td>Transferencia a humano</td>
+        <td>Standard Agent Action (handoff)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-both">🟦 Ambos (condicional)</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- SECTION 4: CONSUMO DATA 360 -->
+  <hr class="div">
+  <h2>4. Consumo de Data Service Credits</h2>
+  <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.2rem;">
+    El consumo de Data Service Credits en este flujo se concentra <strong>casi exclusivamente en HU53</strong> —
+    el único punto donde hay retrieval semántico sobre contenido no estructurado.
+    El resto del flujo (HU50–52, 54–58, 60–61) es orquestación estructurada dentro de Salesforce CRM
+    que no dispara consumo de Data Service Credits.
+  </p>
+
+  <div class="tbl-wrap tbl-wrap-visible">
+  <table class="tbl-navy">
+    <thead>
+      <tr>
+        <th>HU / Concepto</th>
+        <th>Tipo de consumo</th>
+        <th>Costo unitario</th>
+        <th>Cuándo se dispara</th>
+        <th>Nota clave</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>HU53</strong><span class="info-icon" tabindex="0">i<span class="info-tooltip">Dentro del ecosistema Agentforce, cuando un agente necesita recuperar información, se apoya en una herramienta programática específica llamada la acción <strong>Answer Questions with Knowledge</strong>. Esta acción no consulta la base de datos estándar del CRM. En su lugar, se apoya en la <strong>Agentforce Data Library</strong>, que actúa como un wrapper que automatiza la creación de índices de búsqueda de Data Cloud.</span></span><br><span style="font-size:0.8rem;color:var(--muted);">Retrieval base de conocimientos</span></td>
+        <td><strong>Data Queries</strong><br><span style="font-size:0.8rem;color:var(--muted);">Data Service Credits</span></td>
+        <td class="cr">~2 créditos<br><span style="font-size:0.8rem;color:var(--muted);">por millón de filas de índice consultadas</span></td>
+        <td>Cada vez que un cliente activa HU53 (sin caso previo) y el agente consulta la base de conocimientos</td>
+        <td>Búsqueda vectorial pura ~2 cr/M; híbrida ~4 cr/M. <strong>Escala con volumen:</strong> costo recurrente proporcional al tráfico de soporte.</td>
+      </tr>
+      <tr>
+        <td><strong>HU50–52, 54–61</strong><br><span style="font-size:0.8rem;color:var(--muted);">Resto del flujo</span></td>
+        <td>Sin consumo de Data Service Credits</td>
+        <td>—</td>
+        <td>Detección de intención, consulta CRM (SOQL), creación/asignación de casos, trazabilidad</td>
+        <td>Datos estructurados nativos del CRM. HU51 consulta directamente el objeto Case vía SOQL — no RAG ni DMO.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- SECTION 5: PROYECCIÓN MENSUAL -->
+  <h2>5. Proyección Mensual de Créditos</h2>
+  <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.2rem;">
+    Basada en el blended de ~3 acciones · <strong>60 créditos por conversación</strong> en producción.
+    Ajusta el rate a 48 cr para sandbox (16 cr/acción).
+  </p>
+
+  <div class="tbl-wrap">
+  <table class="tbl-navy">
+    <thead>
+      <tr>
+        <th>Conversaciones / mes</th>
+        <th>Créditos Prod (60 cr/conv)</th>
+        <th>Créditos Sandbox (48 cr/conv)</th>
+        <th>Créditos Prod — Camino A puro (40 cr)</th>
+        <th>Créditos Prod — Camino B puro (80 cr)</th>
+        <th>Data Service Credits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>500</td>
+        <td class="cr">30,000</td>
+        <td>24,000</td>
+        <td>20,000</td>
+        <td>40,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr>
+        <td>1,000</td>
+        <td class="cr">60,000</td>
+        <td>48,000</td>
+        <td>40,000</td>
+        <td>80,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr>
+        <td>5,000</td>
+        <td class="cr">300,000</td>
+        <td>240,000</td>
+        <td>200,000</td>
+        <td>400,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr class="hl-blue">
+        <td>10,000</td>
+        <td class="cr">600,000</td>
+        <td>480,000</td>
+        <td>400,000</td>
+        <td>800,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr>
+        <td>25,000</td>
+        <td class="cr">1,500,000</td>
+        <td>1,200,000</td>
+        <td>1,000,000</td>
+        <td>2,000,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr>
+        <td>50,000</td>
+        <td class="cr">3,000,000</td>
+        <td>2,400,000</td>
+        <td>2,000,000</td>
+        <td>4,000,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details class="anexo">
+    <summary>Anexo — HUs sin costo Agentforce (Flujo 1)</summary>
+    <div class="anexo-body">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem;">Estas historias de usuario no generan acciones facturables de Agentforce. Se incluyen aquí como referencia de comportamiento del agente.</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>HU</th>
+            <th>Descripción</th>
+            <th>Paso del diagrama</th>
+            <th>Tipo de acción</th>
+            <th>Créd. Prod</th>
+            <th>Créd. Sandbox</th>
+            <th>Camino</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="row-HU58">
+            <td>HU58</td>
+            <td>No es acción de Agentforce: es lógica condicional sobre el mismo resultado de HU51, no hay invocación nueva.</td>
+            <td>Evitar duplicidad de solicitudes</td>
+            <td>Lógica condicional sobre HU51</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+          <tr id="row-HU52">
+            <td>HU52</td>
+            <td>Respuesta redactada en el mismo turno conversacional del LLM, no dispara un tool call separado. Confirma que sí hay caso previo.</td>
+            <td>Informar estatus si existe caso previo</td>
+            <td>Sin costo — respuesta en el mismo turno del LLM</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-a">🟩 Camino A</td>
+          </tr>
+          <tr id="row-HU55">
+            <td>HU55</td>
+            <td>No es acción del agente: es automatización (regla de asignación/Flow) en background, no la invoca el agente directamente.</td>
+            <td>Asignar caso a cola Fotografía</td>
+            <td>Sin costo — automatización background (regla/Flow)</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-b">🟨 Camino B</td>
+          </tr>
+          <tr id="row-HU56">
+            <td>HU56</td>
+            <td>Igual que HU52: texto de respuesta en el mismo turno, no una llamada a herramienta aparte.</td>
+            <td>Informar número de solicitud</td>
+            <td>Sin costo — respuesta en el mismo turno del LLM</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-b">🟨 Camino B</td>
+          </tr>
+          <tr id="row-HU57">
+            <td>HU57 / HU60</td>
+            <td>Logging de sesión (auditoría interna), no es una invocación medible bajo el rate card de Agentforce.</td>
+            <td>Registrar historial / trazabilidad</td>
+            <td>Sin costo — logging de sesión (auditoría interna)</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+          <tr id="row-HU59">
+            <td>HU59</td>
+            <td>Es una regla de comportamiento/guardrail del Topic, no una acción ejecutable — no consume créditos.</td>
+            <td>Restricción: no envío de archivos</td>
+            <td>Sin costo — guardrail del Topic, no acción ejecutable</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+
+</div><!-- /page-inner -->
+</div><!-- /p1 -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 2 — FLUJO 2: PICKUP / TRANSPORTE
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="p2" class="page">
+<div class="page-inner">
+
+  <h1>Flujo 2 — Consulta de Pickup / Transporte Programado</h1>
+  <p class="subtitle">
+    <span class="badge">Agentforce</span>
+    <span class="badge badge-dc">Data Cloud</span>
+    Estimado del equipo de Consumption Leads con base en flujos compartidos por Nuvalia para Xcaret
+  </p>
+
+  <div class="diagram-wrap">
+    <div class="diagram-container" id="diag2">
+      <img src="flujo2.png" alt="Diagrama Flujo 2 — Consulta de Pickup / Transporte">
+
+      <!-- HU62: clasificación de intención -->
+      <div class="hs tip-right" style="left:3%;top:7%;width:12%;height:14%;" data-rows="row-HU62">
+        <div class="tip">
+          <div class="tip-hu">HU62 — Paso 1</div>
+          <div class="tip-action">🔵 Standard Agent Action — clasificación de intención / routing de Topic</div>
+          <div class="tip-cost"><span class="paid">1 acción · 20 cr prod / 16 cr sandbox</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU62">Ver HU62 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU63: verificación de identidad -->
+      <div class="hs" style="left:18%;top:7%;width:12%;height:14%;" data-rows="row-HU63">
+        <div class="tip">
+          <div class="tip-hu">HU63 — Paso 2</div>
+          <div class="tip-action">🔵 Standard Agent Action — verificación de identidad del cliente</div>
+          <div class="tip-cost"><span class="paid">1 acción · 20 cr prod / 16 cr sandbox</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU63">Ver HU63 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU64: recolección de slots -->
+      <div class="hs" style="left:33%;top:7%;width:12%;height:14%;" data-rows="row-HU64">
+        <div class="tip">
+          <div class="tip-hu">HU64 — Paso 3</div>
+          <div class="tip-action">Recolección de datos del pedido (slots) dentro del mismo diálogo del LLM</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (no es acción separada)</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU64">Ver HU64 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU65: query CRM pickup/transporte -->
+      <div class="hs" style="left:48%;top:7%;width:12%;height:14%;" data-rows="row-HU65">
+        <div class="tip">
+          <div class="tip-hu">HU65 — Paso 4</div>
+          <div class="tip-action">🔵 Standard Agent Action — consulta de estado de pickup / transporte en CRM</div>
+          <div class="tip-cost"><span class="paid">1 acción · 20 cr prod / 16 cr sandbox</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU65">Ver HU65 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU66: respuesta Camino A -->
+      <div class="hs tip-left" style="left:66%;top:7%;width:12%;height:14%;" data-rows="row-HU66">
+        <div class="tip">
+          <div class="tip-hu">HU66 — Paso 5 (Camino A)</div>
+          <div class="tip-action">Respuesta con estatus de pickup en el mismo turno del LLM</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr</span></div>
+          <div class="tip-action">Camino: 🟩 Solo Camino A (pickup encontrado)</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU66">Ver HU66 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU68: memoria de sesión / contexto -->
+      <div class="hs tip-left" style="left:81%;top:7%;width:12%;height:14%;" data-rows="row-HU68">
+        <div class="tip">
+          <div class="tip-hu">HU68</div>
+          <div class="tip-action">Memoria de sesión del LLM — retención de contexto entre turnos</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (capacidad nativa del agente)</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU68">Ver HU68 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU69: lógica condicional Camino B -->
+      <div class="hs" style="left:30%;top:46%;width:14%;height:13%;" data-rows="row-HU69">
+        <div class="tip">
+          <div class="tip-hu">HU69 — Camino B</div>
+          <div class="tip-action">Lógica condicional sobre resultado de HU65 (no encontrado)</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (ramificación interna del LLM)</span></div>
+          <div class="tip-action">Camino: 🟥 Solo Camino B</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU69">Ver HU69 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU70+72: crear solicitud + handoff -->
+      <div class="hs tip-left" style="left:62%;top:46%;width:16%;height:13%;" data-rows="row-HU70,row-HU72">
+        <div class="tip">
+          <div class="tip-hu">HU70 · HU72 — Camino B</div>
+          <div class="tip-action">🔵 Standard Agent Action — crear solicitud de transporte (HU70)</div>
+          <div class="tip-action">🔵 Standard Agent Action — handoff a agente humano / escalación (HU72)</div>
+          <div class="tip-cost"><span class="paid">2 acciones · 40 cr prod / 32 cr sandbox</span></div>
+          <div class="tip-action">Camino: 🟥 Solo Camino B</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU70">HU70 ↓</a> <a class="tip-link" data-row="row-HU72">HU72 ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU71: logging de auditoría -->
+      <div class="hs" style="left:22%;top:68%;width:14%;height:12%;" data-rows="row-HU71">
+        <div class="tip">
+          <div class="tip-hu">HU71</div>
+          <div class="tip-action">Logging de auditoría de sesión — operación interna del agente</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-HU71">Ver HU71 en tabla ↓</a></div>
+        </div>
+      </div>
+    </div>
+    <p class="diagram-caption">Diagrama de flujo compartido por Nuvalia (2026-07-20) · Pasa sobre cada nodo para ver la acción Agentforce</p>
+  </div>
+
+  <hr class="div">
+
+  <!-- SECTION 1: RESUMEN POR CAMINO -->
+  <h2>1. Resumen por Camino</h2>
+
+  <div class="tbl-wrap">
+  <table class="tbl-green">
+    <thead>
+      <tr>
+        <th>Escenario</th>
+        <th>HUs facturables</th>
+        <th>Acciones</th>
+        <th>Créditos Prod</th>
+        <th>Créditos Sandbox</th>
+        <th>Data Service Credits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Camino A — Reserva encontrada (sin transferencia)</strong></td>
+        <td>HU62, HU63, HU65</td>
+        <td>3</td>
+        <td class="cr">60</td><td class="cr">48</td>
+        <td class="cr-blue">~2 cr / M filas<br><span style="font-size:0.78rem;color:var(--muted);">Data Queries vía HU63</span></td>
+      </tr>
+      <tr>
+        <td><strong>Camino B — Con transferencia a ejecutivo</strong></td>
+        <td>HU62, HU63, HU65, HU70, HU72</td>
+        <td>5</td>
+        <td class="cr">100</td><td class="cr">80</td>
+        <td class="cr-blue">~2 cr / M filas<br><span style="font-size:0.78rem;color:var(--muted);">Data Queries vía HU63</span></td>
+      </tr>
+      <tr class="hl-green">
+        <td><strong>Estimación blended (~3 acciones promedio)</strong></td>
+        <td>Ponderado 80% A · 20% B</td>
+        <td>~3</td>
+        <td class="cr">~64</td><td class="cr">~51</td>
+        <td class="cr-blue">~2 cr / M filas<br><span style="font-size:0.78rem;color:var(--muted);">Todas las conversaciones (HU63 en ambos caminos)</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <hr class="div">
+
+  <!-- SECTION 2: PATHS DETALLADOS -->
+  <h2>2. Paths Detallados</h2>
+
+  <h3>Path A — Reserva encontrada, sin transferencia (3 acciones)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Identificar intención y validar identidad del huésped</td><td>HU62</td><td>—</td></tr>
+      <tr><td>2</td><td>Consultar reserva activa del huésped en Salesforce</td><td>HU63</td><td><span class="cr-blue">~2 cr / M filas<br><span style="font-size:0.78rem;font-weight:400;">Data Queries · búsqueda en base de reservas</span></span></td></tr>
+      <tr><td>3</td><td>Responder consulta de servicios o información del paquete</td><td>HU65</td><td>—</td></tr>
+      <tr><td>—</td><td>Confirmar respuesta al huésped (texto en mismo turno, sin costo)</td><td>HU64</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Path B — Con transferencia a ejecutivo (5 acciones)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Identificar intención y validar identidad del huésped</td><td>HU62</td><td>—</td></tr>
+      <tr><td>2</td><td>Consultar reserva activa del huésped en Salesforce</td><td>HU63</td><td><span class="cr-blue">~2 cr / M filas<br><span style="font-size:0.78rem;font-weight:400;">Data Queries · búsqueda en base de reservas</span></span></td></tr>
+      <tr><td>3</td><td>Responder consulta de servicios o información del paquete</td><td>HU65</td><td>—</td></tr>
+      <tr><td>4</td><td>Detectar necesidad de escalación y notificar al ejecutivo</td><td>HU70</td><td>—</td></tr>
+      <tr><td>5</td><td>Transferir conversación al ejecutivo asignado</td><td>HU72</td><td>—</td></tr>
+      <tr><td>—</td><td>Confirmar transferencia al huésped (texto en mismo turno, sin costo)</td><td>HU71</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- SECTION 3: ACCIONES -->
+  <h2>3. Acciones Agentforce por HU</h2>
+
+  <!-- Einstein mascot for Flujo 2 -->
+  <div class="mascot-wrap">
+    <img src="assets/EINSTEIN_Coat_WaveRight_SFS20_sRGB%201.png" alt="Einstein mascot" style="height:110px;width:auto;">
+    <div class="mascot-bubble">
+      Soy <strong>Einstein</strong>. En este flujo de <em>Pickup</em>, el agente valida identidad, consulta reservas y escala si no las encuentra. Revisa qué pasos generan acciones facturables y cuáles son solo lógica de conversación sin costo.
+    </div>
+  </div>
+
+  <p style="font-size:0.88rem; margin-bottom:1rem; color:var(--muted);">
+    🟦 Ambos caminos &nbsp;·&nbsp; 🟩 Solo Camino A (reserva encontrada) &nbsp;·&nbsp; 🟥 Solo Camino B (no localizada / transferencia)
+  </p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>HU</th>
+        <th>Descripción</th>
+        <th>Paso del diagrama</th>
+        <th>Tipo de acción</th>
+        <th>Créd. Prod</th>
+        <th>Créd. Sandbox</th>
+        <th>Camino</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="row-HU62">
+        <td>HU62</td>
+        <td>Es acción de Agentforce porque cada invocación de razonamiento del Topic para clasificar la intención cuenta como 1 acción estándar.</td>
+        <td>Detectar intención de confirmación pickup</td>
+        <td>Standard Agent Action (clasificación)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-both">🟦 Ambos</td>
+      </tr>
+      <tr id="row-HU63">
+        <td>HU63</td>
+        <td>El agente llama a un servicio externo de validación de identidad antes de exponer datos del cliente — se factura como acción estándar.</td>
+        <td>Validar autenticación del cliente</td>
+        <td>Standard Agent Action (verificación identidad)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-both">🟦 Ambos</td>
+      </tr>
+      <tr id="row-HU65">
+        <td>HU65</td>
+        <td>"Query CRM" significa que el agente consulta el objeto de reservas en Salesforce (SOQL/Flow), no un DMO de Data 360 — mismo tratamiento que HU51 del Flujo 1.</td>
+        <td>Consultar reservas activas</td>
+        <td>Standard Agent Action (query CRM)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-both">🟦 Ambos</td>
+      </tr>
+      <tr id="row-HU70">
+        <td>HU70</td>
+        <td>"Create record" implica una operación DML real (crear un Case) vía Flow/Apex Action — solo se factura si efectivamente ocurre.</td>
+        <td>Crear caso (solo si hay transferencia)</td>
+        <td>Standard Agent Action (create record)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-c">🟥 Camino B</td>
+      </tr>
+      <tr id="row-HU72">
+        <td>HU72</td>
+        <td>"Handoff" es una acción explícita del agente para escalar a un humano — se factura como acción estándar adicional.</td>
+        <td>Transferencia contextual a ejecutivo</td>
+        <td>Standard Agent Action (handoff)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-c">🟥 Camino B</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- SECTION 4: CONSUMO DATA 360 -->
+  <hr class="div">
+  <h2>4. Consumo de Data Service Credits</h2>
+  <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.2rem;">
+    Aplicable a <strong>HU63</strong> — Validar autenticación consultando el Unified Profile.<br>
+    Cuando el agente consulta el Unified Profile para validar la identidad del cliente durante la conversación,
+    esto consume el usage type <strong>Data Queries</strong> de Data 360 — es una consulta "pull" a demanda,
+    no un proceso continuo/streaming, ya que solo se dispara cuando el cliente lo solicita.
+  </p>
+
+  <div class="tbl-wrap tbl-wrap-visible">
+  <table class="tbl-navy">
+    <thead>
+      <tr>
+        <th>Tipo de consumo</th>
+        <th>Costo unitario</th>
+        <th>Cuándo se dispara</th>
+        <th>Nota clave</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Data Queries</strong><span class="info-icon" tabindex="0">i<span class="info-tooltip">Para validar la identidad de un cliente hay dos opciones: <strong>Agentforce nativo</strong>, donde una Acción de Agente (Flow Autolaunched o Apex) consulta directamente el objeto Contact en el CRM transaccional y factura solo Flex Credits (ej. 20 créditos por acción), ideal cuando el dato ya vive en el CRM; o <strong>Data Cloud Identity Resolution</strong>, que factura créditos de Data Cloud Services y conviene cuando se necesita unificar identidades de múltiples fuentes o hacer búsqueda semántica/SQL sobre el lakehouse.</span></span><br><span style="font-size:0.8rem;color:var(--muted);">Data 360</span></td>
+        <td class="cr">~2 créditos<br><span style="font-size:0.8rem;color:var(--muted);">por millón de filas escaneadas</span></td>
+        <td>Por cada consulta del agente al Unified Profile durante la conversación</td>
+        <td>El costo depende de filas <em>escaneadas</em>, no devueltas — filtrar por criterio (ej. número de reserva, email) mantiene el consumo mínimo</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <hr class="div">
+
+  <!-- PROYECCIÓN -->
+  <h2>5. Proyección Mensual de Créditos</h2>
+  <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.2rem;">
+    Basada en el blended de ~3 acciones · <strong>~64 créditos por conversación</strong>.
+  </p>
+
+  <div class="tbl-wrap">
+  <table class="tbl-navy">
+    <thead>
+      <tr>
+        <th>Conversaciones / mes</th>
+        <th>Créditos Prod (64 cr/conv)</th>
+        <th>Créditos Sandbox (51 cr/conv)</th>
+        <th>Camino A puro (60 cr)</th>
+        <th>Camino B puro — con transferencia (100 cr)</th>
+        <th>Data Service Credits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>500</td>
+        <td class="cr">32,000</td><td>25,500</td>
+        <td>30,000</td><td>50,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr>
+        <td>1,000</td>
+        <td class="cr">64,000</td><td>51,000</td>
+        <td>60,000</td><td>100,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr>
+        <td>5,000</td>
+        <td class="cr">320,000</td><td>255,000</td>
+        <td>300,000</td><td>500,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr class="hl-blue">
+        <td>10,000</td>
+        <td class="cr">640,000</td><td>510,000</td>
+        <td>600,000</td><td>1,000,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr>
+        <td>25,000</td>
+        <td class="cr">1,600,000</td><td>1,275,000</td>
+        <td>1,500,000</td><td>2,500,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+      <tr>
+        <td>50,000</td>
+        <td class="cr">3,200,000</td><td>2,550,000</td>
+        <td>3,000,000</td><td>5,000,000</td>
+        <td class="cr-blue">~2 cr / M filas</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details class="anexo">
+    <summary>Anexo — HUs sin costo Agentforce (Flujo 2)</summary>
+    <div class="anexo-body">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem;">Estas historias de usuario no generan acciones facturables de Agentforce. Se incluyen aquí como referencia de comportamiento del agente.</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>HU</th>
+            <th>Descripción</th>
+            <th>Paso del diagrama</th>
+            <th>Tipo de acción</th>
+            <th>Créd. Prod</th>
+            <th>Créd. Sandbox</th>
+            <th>Camino</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="row-HU64">
+            <td>HU64</td>
+            <td>No es acción de Agentforce: es recolección de slots dentro del mismo diálogo, sin invocar una herramienta nueva.</td>
+            <td>Solicitar/confirmar datos de reserva</td>
+            <td>Sin costo — recolección de slots en el mismo diálogo</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+          <tr id="row-HU66">
+            <td>HU66</td>
+            <td>Respuesta generada en el mismo turno del LLM a partir del resultado de HU65, sin acción/tool call separada.</td>
+            <td>Mostrar fecha y detalle del servicio</td>
+            <td>Sin costo — respuesta en el mismo turno del LLM</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-a">🟩 Camino A</td>
+          </tr>
+          <tr id="row-HU68">
+            <td>HU68</td>
+            <td>Es memoria de sesión propia del LLM, no una invocación de herramienta facturable.</td>
+            <td>Mantener contexto conversacional</td>
+            <td>Sin costo — memoria de sesión del LLM</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+          <tr id="row-HU69">
+            <td>HU69</td>
+            <td>Lógica condicional sobre el resultado ya obtenido en HU65 — no es nueva invocación, dispara el camino de transferencia.</td>
+            <td>Manejo de reserva no localizada</td>
+            <td>Sin costo — lógica condicional sobre HU65</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-c">🟥 Camino B</td>
+          </tr>
+          <tr id="row-HU71">
+            <td>HU71</td>
+            <td>Logging de auditoría de la sesión, no es una acción medible bajo el rate card de Agentforce.</td>
+            <td>Registrar historial de consulta</td>
+            <td>Sin costo — logging de auditoría de sesión</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+
+</div>
+</div><!-- /p2 -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 4 — PREGUNTAS PENDIENTES
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="p4" class="page">
+<div class="page-inner">
+
+  <h1>Preguntas Pendientes</h1>
+
+  <!-- NUVALIA -->
+  <div class="q-group">
+    <h3>Para Nuvalia (arquitectura del agente)</h3>
+    <ul class="q-list">
+      <li>
+        ¿La búsqueda de información base en HU53 usa Salesforce Knowledge estándar, o está indexada/vectorizada en Data Cloud?
+      </li>
+      <li>
+        ¿Qué mecanismo se utiliza para la verificación de identidad en HU63: validación directa contra Salesforce CRM, un servicio externo de autenticación/OTP, o Data Cloud Real-Time Profile?
+      </li>
+    </ul>
+  </div>
+
+</div>
+</div><!-- /p4 -->
+
+
+<!-- LIGHTBOX -->
+<div id="lb-overlay" role="dialog" aria-modal="true" aria-label="Diagrama ampliado">
+  <button id="lb-close" aria-label="Cerrar">✕</button>
+  <div id="lb-inner"></div>
+</div>
+
+<script>
+  function showPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── HOTSPOT TOOLTIPS — posicionamiento dinámico con position:fixed ──
+  (function () {
+    function positionTip(hs, tip) {
+      const hsRect  = hs.getBoundingClientRect();
+      const tipW    = tip.offsetWidth  || 260;
+      const tipH    = tip.offsetHeight || 120;
+      const margin  = 10;
+      const vw      = window.innerWidth;
+      const vh      = window.innerHeight;
+
+      // Vertical: preferir arriba; si no cabe, abrir abajo
+      let top;
+      if (hsRect.top - tipH - 10 >= margin) {
+        // Cabe arriba
+        top = hsRect.top - tipH - 10;
+        tip.classList.add('dir-up');
+        tip.classList.remove('dir-down');
+      } else {
+        // Abrir abajo
+        top = hsRect.bottom + 10;
+        tip.classList.add('dir-down');
+        tip.classList.remove('dir-up');
+      }
+
+      // Horizontal: centrar en el hotspot, ajustar si se sale
+      let left = hsRect.left + hsRect.width / 2 - tipW / 2;
+      left = Math.max(margin, Math.min(left, vw - tipW - margin));
+
+      // Ajustar flecha según offset real
+      const arrowLeft = (hsRect.left + hsRect.width / 2) - left;
+      tip.style.setProperty('--arrow-left', Math.round(arrowLeft) + 'px');
+
+      tip.style.top  = Math.round(top)  + 'px';
+      tip.style.left = Math.round(left) + 'px';
+    }
+
+    function attachHotspots(root) {
+      root.querySelectorAll('.hs').forEach(hs => {
+        if (hs._tipBound) return;
+        hs._tipBound = true;
+        const tip = hs.querySelector('.tip');
+        if (!tip) return;
+
+        hs.addEventListener('mouseenter', function () {
+          tip.style.display = 'block';
+          positionTip(hs, tip);
+        });
+        hs.addEventListener('mousemove', function () {
+          positionTip(hs, tip);
+        });
+        hs.addEventListener('mouseleave', function () {
+          if (!hs.classList.contains('pinned')) {
+            tip.style.display = 'none';
+          }
+        });
+
+        // Click hotspot: toggle pinned state
+        hs.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const wasPinned = hs.classList.contains('pinned');
+          // Unpin all hotspots in this root first
+          root.querySelectorAll('.hs.pinned').forEach(h => {
+            h.classList.remove('pinned');
+            const t = h.querySelector('.tip');
+            if (t) t.style.display = 'none';
+          });
+          if (!wasPinned) {
+            hs.classList.add('pinned');
+            tip.style.display = 'block';
+            positionTip(hs, tip);
+          }
+        });
+
+        // Click tip-links: scroll to table row
+        tip.querySelectorAll('.tip-link').forEach(link => {
+          link.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const rowId = link.getAttribute('data-row');
+            if (!rowId) return;
+            // If inside lightbox, close it first then scroll
+            const inLightbox = !!link.closest('#lb-inner');
+            if (inLightbox && window._closeLightbox) {
+              window._closeLightbox();
+            }
+            // Unpin the hotspot
+            hs.classList.remove('pinned');
+            tip.style.display = 'none';
+            // Scroll after a short delay if lightbox was open (allows DOM to restore)
+            setTimeout(function () {
+              const target = document.getElementById(rowId);
+              if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.classList.add('row-highlight');
+                setTimeout(function () { target.classList.remove('row-highlight'); }, 2000);
+              }
+            }, inLightbox ? 120 : 0);
+          });
+        });
+      });
+    }
+
+    // Unpin all hotspots when clicking outside any hotspot
+    document.addEventListener('click', function () {
+      document.querySelectorAll('.hs.pinned').forEach(h => {
+        h.classList.remove('pinned');
+        const t = h.querySelector('.tip');
+        if (t) t.style.display = 'none';
+      });
+    });
+
+    // Flecha dinámica via CSS custom property
+    const style = document.createElement('style');
+    style.textContent = `
+      .hs .tip.dir-up::after  { left: var(--arrow-left, 20px); }
+      .hs .tip.dir-down::after { left: var(--arrow-left, 20px); }
+    `;
+    document.head.appendChild(style);
+
+    // Bind inicial
+    attachHotspots(document);
+
+    // Re-bind cuando se abra el lightbox (clona nodos)
+    window._attachLightboxHotspots = attachHotspots;
+  })();
+
+  // ── LIGHTBOX ──
+  (function () {
+    const overlay = document.getElementById('lb-overlay');
+    const inner   = document.getElementById('lb-inner');
+    const closeBtn = document.getElementById('lb-close');
+
+    function openLightbox(container) {
+      // Clone the whole diagram-container (img + all hotspots) into the lightbox
+      const clone = container.cloneNode(true);
+      // Make the cloned image non-zoom so it doesn't re-trigger
+      clone.querySelectorAll('img').forEach(i => i.style.cursor = 'default');
+      // Remove any lingering open tooltips
+      clone.querySelectorAll('.tip').forEach(t => t.style.display = '');
+      while (inner.firstChild) inner.removeChild(inner.firstChild);
+      inner.appendChild(clone);
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      // Bind tooltips dinámicos en los nodos clonados
+      if (window._attachLightboxHotspots) window._attachLightboxHotspots(inner);
+    }
+
+    function closeLightbox() {
+      overlay.classList.remove('open');
+      while (inner.firstChild) inner.removeChild(inner.firstChild);
+      document.body.style.overflow = '';
+    }
+    window._closeLightbox = closeLightbox;
+
+    // Attach click on every diagram image (current + future tabs)
+    document.querySelectorAll('.diagram-container img').forEach(img => {
+      img.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openLightbox(this.closest('.diagram-container'));
+      });
+    });
+
+    // Close on overlay background click
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeLightbox();
+    });
+
+    // Close button
+    closeBtn.addEventListener('click', closeLightbox);
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    // Stop click inside inner from closing
+    inner.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+  })();
+</script>
+
+</body>
+</html>
