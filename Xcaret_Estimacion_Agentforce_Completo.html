@@ -586,6 +586,7 @@
       <li><button class="active" onclick="showPage('p1',this)">Flujo 1 — Fotografías</button></li>
       <li><button onclick="showPage('p2',this)">Flujo 2 — Pickup</button></li>
       <li><button onclick="showPage('p3',this)">Identificación del Cliente</button></li>
+      <li><button onclick="showPage('p5',this)">Seguimiento de Casos</button></li>
       <li><button onclick="showPage('p4',this)">Preguntas Pendientes</button></li>
     </ul>
     <!-- Logos: Xcaret + Salesforce side by side, same height -->
@@ -2122,6 +2123,444 @@
 
 
 <!-- ══════════════════════════════════════════════════════════════════
+     PAGE 5 — PROCESO: SEGUIMIENTO DE CASOS O TRÁMITES
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="p5" class="page">
+<div class="page-inner">
+
+  <h1>Proceso — Seguimiento de Casos o Trámites</h1>
+  <p class="subtitle">
+    <span class="badge">Agentforce</span>
+    Estimado del equipo de Consumption Leads con base en el proceso de seguimiento de casos compartido por Nuvalia para Xcaret
+  </p>
+
+  <!-- DIAGRAM -->
+  <div class="diagram-wrap">
+    <div class="diagram-container" id="diag5">
+      <img src="seguimiento-casos.jpg" alt="Diagrama Proceso — Seguimiento de Casos o Trámites">
+
+      <!-- HU38: detectar intención -->
+      <div class="hs" style="left:1%;top:11%;width:18%;height:30%;" data-rows="row-req4-HU38">
+        <div class="tip">
+          <div class="tip-hu">1 · Req4-HU38</div>
+          <div class="tip-action">Reconocimiento de intención del cliente — lógica conversacional</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (no invoca acción ni consulta)</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU38">Ver HU38 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU39: solicitar número de caso -->
+      <div class="hs" style="left:21%;top:11%;width:18%;height:30%;" data-rows="row-req4-HU39">
+        <div class="tip">
+          <div class="tip-hu">2 · Req4-HU39</div>
+          <div class="tip-action">Solicita el número de caso y valida formato en memoria de sesión</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (supuesto: sin consulta a Salesforce todavía)</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU39">Ver HU39 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU40: consultar expediente -->
+      <div class="hs" style="left:41%;top:11%;width:18%;height:30%;" data-rows="row-req4-HU40">
+        <div class="tip">
+          <div class="tip-hu">3 · Req4-HU40</div>
+          <div class="tip-action">🔵 Standard Agent Action — consultar expediente en objeto Case (Core CRM)</div>
+          <div class="tip-cost"><span class="paid">1 acción · 20 cr prod / 16 cr sandbox</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU40">Ver HU40 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU41: informar estatus -->
+      <div class="hs" style="left:61%;top:11%;width:18%;height:30%;" data-rows="row-req4-HU41">
+        <div class="tip">
+          <div class="tip-hu">4 · Req4-HU41</div>
+          <div class="tip-action">Respuesta en el mismo turno del LLM, reutiliza datos ya consultados en HU40</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU41">Ver HU41 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU68: contexto conversacional -->
+      <div class="hs tip-left" style="left:82%;top:11%;width:17%;height:30%;" data-rows="row-req4-HU68">
+        <div class="tip">
+          <div class="tip-hu">Req4-HU68</div>
+          <div class="tip-action">Memoria de sesión / contexto conversacional del caso consultado</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (capacidad nativa del agente)</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU68">Ver HU68 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU69: caso no localizado -->
+      <div class="hs" style="left:15%;top:50%;width:46%;height:22%;" data-rows="row-req4-HU69">
+        <div class="tip">
+          <div class="tip-hu">5 · Req4-HU69</div>
+          <div class="tip-action">Manejo de caso no localizado — ofrece opciones al cliente, conserva contexto</div>
+          <div class="tip-cost"><span class="free">Por confirmar — 0 cr (supuesto conservador)</span></div>
+          <div class="tip-action">Camino: 🟧 Excepción (caso no localizado)</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU69">Ver HU69 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU72: solicita apoyo (detección) -->
+      <div class="hs" style="left:64%;top:50%;width:12%;height:22%;" data-rows="row-req4-HU72">
+        <div class="tip">
+          <div class="tip-hu">6a · Req4-HU72</div>
+          <div class="tip-action">Detección de intención/necesidad de escalar a humano — sin invocación de herramienta</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr</span></div>
+          <div class="tip-action">Camino: 🟥 Transferencia</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU72">Ver HU72 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU70: crear caso de transferencia -->
+      <div class="hs tip-left" style="left:77%;top:50%;width:12%;height:22%;" data-rows="row-req4-HU70">
+        <div class="tip">
+          <div class="tip-hu">6b · Req4-HU70</div>
+          <div class="tip-action">🔵 Standard Agent Action — crear Case de transferencia con el contexto completo</div>
+          <div class="tip-cost"><span class="paid">1 acción · 20 cr prod / 16 cr sandbox</span></div>
+          <div class="tip-action">Camino: 🟥 Transferencia</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU70">Ver HU70 en tabla ↓</a></div>
+        </div>
+      </div>
+
+      <!-- HU71: registrar historial -->
+      <div class="hs" style="left:1%;top:71%;width:97%;height:14%;" data-rows="row-req4-HU71">
+        <div class="tip">
+          <div class="tip-hu">7 · Req4-HU71</div>
+          <div class="tip-action">Logging/auditoría de fondo — registra historial de consulta de caso</div>
+          <div class="tip-cost"><span class="free">Sin costo — 0 cr (posible solape con HU69, ver preguntas pendientes)</span></div>
+          <div class="tip-action">Camino: 🟦 Ambos</div>
+          <div class="tip-links"><a class="tip-link" data-row="row-req4-HU71">Ver HU71 en tabla ↓</a></div>
+        </div>
+      </div>
+    </div>
+    <p class="diagram-caption">Diagrama de proceso compartido por Nuvalia (2026-08-25) · Pasa sobre cada nodo para ver la acción Agentforce</p>
+  </div>
+
+  <hr class="div">
+
+  <!-- SECTION 1: RESUMEN POR CAMINO -->
+  <h2>1. Resumen por Camino</h2>
+
+  <div class="tbl-wrap">
+  <table class="tbl-green">
+    <thead>
+      <tr>
+        <th>Escenario</th>
+        <th>HUs con acción facturable</th>
+        <th>Acciones</th>
+        <th>Créditos Prod</th>
+        <th>Créditos Sandbox</th>
+        <th>Data Service Credits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Consulta de estatus exitosa (sin escalamiento)</strong></td>
+        <td>HU40</td>
+        <td>1</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><strong>Consulta con transferencia a ejecutivo</strong></td>
+        <td>HU40, HU70</td>
+        <td>2</td>
+        <td class="cr">40</td><td class="cr">32</td>
+        <td>—</td>
+      </tr>
+      <tr class="hl-green">
+        <td><strong>Caso no localizado (si HU69 confirma registro separado)</strong></td>
+        <td>HU40 (+ HU69 por confirmar)</td>
+        <td>1 a 2</td>
+        <td class="cr">20 a 40</td><td class="cr">16 a 32</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="insight">
+    <strong>Consumo por consulta, no por conversación:</strong>
+    El flujo no limita cuántos casos distintos puede consultar un cliente en la misma sesión.
+    Cada ejecución de HU40 (consultar expediente) suma <strong>20 cr</strong> adicionales, por lo que el consumo real depende del promedio de consultas por conversación.
+    Esta estimación usa <strong>1 consulta</strong> como supuesto base — ajustar con un multiplicador cuando se tenga visibilidad del promedio real.
+  </div>
+
+  <div class="callout">
+    <strong>Tasa de conversión:</strong> 20 créditos por acción en producción · 16 créditos por acción en sandbox.
+  </div>
+
+  <!-- SECTION 2: PATHS DETALLADOS -->
+  <h2>2. Paths Detallados</h2>
+
+  <h3>Path A — Consulta de estatus exitosa (1 acción)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Detectar intención y solicitar número de caso</td><td>HU38 + HU39</td><td>—</td></tr>
+      <tr><td>2</td><td>Consultar expediente en objeto Case</td><td>HU40</td><td>—</td></tr>
+      <tr><td>—</td><td>Informar estatus y mantener contexto (texto en mismo turno, sin costo)</td><td>HU41 + HU68</td><td>—</td></tr>
+      <tr><td>—</td><td>Registrar historial de consulta (sin costo)</td><td>HU71</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Path B — Consulta con transferencia a ejecutivo (2 acciones)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Detectar intención y solicitar número de caso</td><td>HU38 + HU39</td><td>—</td></tr>
+      <tr><td>2</td><td>Consultar expediente en objeto Case</td><td>HU40</td><td>—</td></tr>
+      <tr><td>—</td><td>Detectar que el cliente requiere apoyo adicional (sin costo)</td><td>HU72</td><td>—</td></tr>
+      <tr><td>3</td><td>Crear Case de transferencia con el contexto completo</td><td>HU70</td><td>—</td></tr>
+      <tr><td>—</td><td>Registrar historial de consulta (sin costo)</td><td>HU71</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Path C — Caso no localizado (edge case, "Por confirmar")</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Detectar intención y solicitar número de caso</td><td>HU38 + HU39</td><td>—</td></tr>
+      <tr><td>2</td><td>Consultar expediente — no se encuentra el caso</td><td>HU40</td><td>—</td></tr>
+      <tr><td>3 por confirmar</td><td>Registrar la consulta no localizada (¿escritura separada a Salesforce?)</td><td>HU69</td><td>—</td></tr>
+      <tr><td>4 opcional</td><td>Si el cliente reintenta con otro dato o pide transferencia, repite Path A o B</td><td>HU40 / HU70</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <hr class="div">
+
+  <!-- SECTION 3: ACCIONES -->
+  <h2>3. Acciones Agentforce por HU</h2>
+
+  <!-- Einstein mascot explaining the table -->
+  <div class="mascot-wrap">
+    <img src="assets/EINSTEIN_Coat_WaveRight_SFS20_sRGB%201.png" alt="Einstein mascot" style="height:110px;width:auto;">
+    <div class="mascot-bubble">
+      Soy <strong>Einstein</strong>. Este es el proceso más ligero de los tres: solo 2 HUs generan acción facturable — consultar el expediente y, si aplica, crear el caso de transferencia. Todo lo demás es conversación o memoria de sesión.
+    </div>
+  </div>
+
+  <p style="font-size:0.88rem; margin-bottom:1rem; color:var(--muted);">
+    Columna «Camino»: 🟦 Ambos caminos &nbsp;·&nbsp; 🟥 Solo transferencia a ejecutivo &nbsp;·&nbsp; 🟧 Excepción (caso no localizado, por confirmar)
+  </p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>HU</th>
+        <th>Descripción</th>
+        <th>Paso del diagrama</th>
+        <th>Tipo de acción</th>
+        <th>Créd. Prod</th>
+        <th>Créd. Sandbox</th>
+        <th>Camino</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="row-req4-HU40">
+        <td>Req4-HU40</td>
+        <td>Ejecuta una acción estándar de Agentforce que consulta directo el objeto Case en Core CRM (confirmado); al no pasar por Data Cloud no genera cargo adicional.</td>
+        <td>Consultar expediente en objeto Case</td>
+        <td>Standard Agent Action (query CRM)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-both">🟦 Ambos</td>
+      </tr>
+      <tr id="row-req4-HU70">
+        <td>Req4-HU70</td>
+        <td>Crea un registro de Case en Salesforce con el contexto de la conversación mediante acción estándar de agente.</td>
+        <td>Crear caso únicamente cuando exista transferencia</td>
+        <td>Standard Agent Action (create record)</td>
+        <td class="cr">20</td><td class="cr">16</td>
+        <td class="tag-c">🟥 Transferencia</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- SECTION 4: CONSUMO DATA 360 -->
+  <hr class="div">
+  <h2>4. Consumo de Data Service Credits</h2>
+  <div class="insight insight-green">
+    <strong>Sin consumo confirmado de Data Service Credits.</strong>
+    Todo el proceso opera sobre el objeto Case en Core CRM (Salesforce estructurado): consulta de expediente (HU40) y creación de caso de transferencia (HU70).
+    Ninguno de los pasos documentados invoca Knowledge, Real-Time Profile u otra fuente de Data Cloud, por lo que este flujo no proyecta cargo adicional de Data Service Credits.
+  </div>
+
+  <!-- SECTION 5: PROYECCIÓN MENSUAL -->
+  <h2>5. Proyección Mensual de Créditos</h2>
+  <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.2rem;">
+    Basada en 1 consulta por conversación (supuesto base). Si el promedio real de consultas por sesión es mayor a 1, multiplicar las columnas de 20/16 cr proporcionalmente.
+  </p>
+
+  <div class="tbl-wrap">
+  <table class="tbl-navy">
+    <thead>
+      <tr>
+        <th>Conversaciones / mes</th>
+        <th>Créditos Prod (20 cr/conv — sin transferencia)</th>
+        <th>Créditos Sandbox (16 cr/conv)</th>
+        <th>Créditos Prod (40 cr/conv — con transferencia)</th>
+        <th>Créditos Sandbox (32 cr/conv)</th>
+        <th>Data Service Credits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>500</td>
+        <td class="cr">10,000</td>
+        <td>8,000</td>
+        <td class="cr">20,000</td>
+        <td>16,000</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>1,000</td>
+        <td class="cr">20,000</td>
+        <td>16,000</td>
+        <td class="cr">40,000</td>
+        <td>32,000</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>5,000</td>
+        <td class="cr">100,000</td>
+        <td>80,000</td>
+        <td class="cr">200,000</td>
+        <td>160,000</td>
+        <td>—</td>
+      </tr>
+      <tr class="hl-blue">
+        <td>10,000</td>
+        <td class="cr">200,000</td>
+        <td>160,000</td>
+        <td class="cr">400,000</td>
+        <td>320,000</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>25,000</td>
+        <td class="cr">500,000</td>
+        <td>400,000</td>
+        <td class="cr">1,000,000</td>
+        <td>800,000</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>50,000</td>
+        <td class="cr">1,000,000</td>
+        <td>800,000</td>
+        <td class="cr">2,000,000</td>
+        <td>1,600,000</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details class="anexo">
+    <summary>Anexo — HUs sin costo Agentforce (Seguimiento de Casos)</summary>
+    <div class="anexo-body">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem;">Estas historias de usuario no generan acciones facturables de Agentforce. Se incluyen aquí como referencia de comportamiento del agente.</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>HU</th>
+            <th>Descripción</th>
+            <th>Paso del diagrama</th>
+            <th>Tipo de acción</th>
+            <th>Créd. Prod</th>
+            <th>Créd. Sandbox</th>
+            <th>Camino</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="row-req4-HU38">
+            <td>Req4-HU38</td>
+            <td>Es reconocimiento de intención del cliente; lógica conversacional sin invocar acción ni consulta.</td>
+            <td>Detectar intención de seguimiento de caso o trámite</td>
+            <td>Lógica conversacional</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+          <tr id="row-req4-HU39">
+            <td>Req4-HU39</td>
+            <td>Se asume que solo solicita el dato y valida el formato en memoria de sesión, sin consultar Salesforce todavía (ver Preguntas Pendientes).</td>
+            <td>Solicitar número oficial de caso para identificación</td>
+            <td>Sin costo — validación de formato en sesión</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+          <tr id="row-req4-HU41">
+            <td>Req4-HU41</td>
+            <td>Reutiliza los datos ya obtenidos en la consulta del expediente (confirmado); es una respuesta conversacional, no una acción nueva.</td>
+            <td>Informar estatus actual del caso al cliente</td>
+            <td>Sin costo — respuesta en el mismo turno del LLM</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+          <tr id="row-req4-HU68">
+            <td>Req4-HU68</td>
+            <td>Es memoria de sesión/contexto conversacional; no invoca ninguna acción ni consulta adicional.</td>
+            <td>Mantener contexto conversacional sobre el caso consultado</td>
+            <td>Sin costo — memoria de sesión</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+          <tr id="row-req4-HU69">
+            <td>Req4-HU69</td>
+            <td>Depende de si "la consulta queda registrada" es una escritura separada a Salesforce o el mismo evento del historial final (ver Preguntas Pendientes); se deja 0 como supuesto conservador.</td>
+            <td>Manejo de caso no localizado</td>
+            <td>Por confirmar — 0 cr (supuesto)</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-edge">🟧 Por confirmar</td>
+          </tr>
+          <tr id="row-req4-HU72">
+            <td>Req4-HU72</td>
+            <td>Es la detección de la intención/necesidad de escalar; la acción con costo real ocurre al crear el caso (HU70).</td>
+            <td>Transferencia contextual a ejecutivo humano</td>
+            <td>Sin costo — detección de intención</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-c">🟥 Transferencia</td>
+          </tr>
+          <tr id="row-req4-HU71">
+            <td>Req4-HU71</td>
+            <td>Es logging/auditoría de fondo (background automation), sin costo según el baseline; posible solape con el registro mencionado en HU69 (ver Preguntas Pendientes).</td>
+            <td>Registrar historial de consulta de caso</td>
+            <td>Sin costo — logging de auditoría (background)</td>
+            <td class="free">0</td><td class="free">0</td>
+            <td class="tag-both">🟦 Ambos</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+
+</div><!-- /page-inner -->
+</div><!-- /p5 -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════
      PAGE 4 — PREGUNTAS PENDIENTES
 ═══════════════════════════════════════════════════════════════════════ -->
 <div id="p4" class="page">
@@ -2146,6 +2585,18 @@
       <li>
         ¿Qué % de conversaciones del proceso de Identificación del Cliente termina en cada escenario (autenticación exitosa, transferencia simple, transferencia con Perfil Unificado, atención fuera de horario)?
         <div class="q-why">Sin esta distribución no es posible calcular un costo blended por conversación, como sí se hizo en los Flujos 1 y 2.</div>
+      </li>
+      <li>
+        En Seguimiento de Casos (Req4-HU39), ¿la solicitud del número de caso valida solo el formato en memoria de sesión, o también verifica su existencia contra Salesforce antes de continuar?
+        <div class="q-why">Si valida existencia contra Salesforce, la acción con costo ocurriría aquí y no únicamente en la consulta del expediente (Req4-HU40).</div>
+      </li>
+      <li>
+        En Seguimiento de Casos (Req4-HU69 vs Req4-HU71), ¿el registro de "consulta no localizada" y el "historial de consulta de caso" son el mismo evento, o son dos escrituras distintas a Salesforce?
+        <div class="q-why">Si son eventos distintos, el estimado actual subestimaría el consumo real en ~20 Flex Credits por cada conversación donde el caso no se encuentre; hoy se asume 0 cr como supuesto conservador.</div>
+      </li>
+      <li>
+        ¿Cuál es el promedio real de consultas de expediente (Req4-HU40) por conversación en Seguimiento de Casos?
+        <div class="q-why">El flujo no limita cuántos casos puede consultar un cliente en la misma sesión; la proyección mensual hoy usa 1 consulta como supuesto base.</div>
       </li>
     </ul>
   </div>
