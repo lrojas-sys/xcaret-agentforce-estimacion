@@ -281,6 +281,26 @@
     .tag-both { color: var(--xc-forest); font-weight: 700; }
     .tag-edge { color: var(--xc-earth); font-weight: 700; }
 
+    /* ── HOME / RESUMEN GENERAL ── */
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 1.6rem; align-items: flex-start; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.3rem; margin-bottom: 1.4rem; }
+    .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .filter-label { font-size: 0.76rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .filter-input { border: 1px solid var(--border); border-radius: 6px; padding: 0.45rem 0.7rem; font-size: 0.85rem; min-width: 220px; background: #fff; color: var(--text); }
+    .filter-reset-btn { align-self: flex-end; background: var(--xc-jungle); color: #fff; border: none; border-radius: 6px; padding: 0.55rem 1rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; height: fit-content; }
+    .filter-reset-btn:hover { background: var(--xc-forest); }
+    .dd-check { position: relative; min-width: 220px; }
+    .dd-check-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; border: 1px solid var(--border); border-radius: 6px; padding: 0.45rem 0.7rem; font-size: 0.85rem; background: #fff; color: var(--text); cursor: pointer; text-align: left; }
+    .dd-check-btn:hover { border-color: var(--xc-leaf); }
+    .dd-check-arrow { color: var(--muted); font-size: 0.75rem; }
+    .dd-check-panel { display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20; min-width: 100%; width: max-content; background: #fff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.12); padding: 0.5rem; max-height: 260px; overflow-y: auto; }
+    .dd-check.open .dd-check-panel { display: block; }
+    .dd-check-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.5rem; font-size: 0.83rem; color: var(--text); border-radius: 5px; cursor: pointer; white-space: nowrap; }
+    .dd-check-item:hover { background: #f1f6ee; }
+    .dd-check-item input { margin: 0; cursor: pointer; }
+    .dd-check-all { font-weight: 700; border-bottom: 1px solid var(--border); margin-bottom: 0.3rem; padding-bottom: 0.5rem; }
+    .hu-jump { font-size: 0.76rem; color: var(--xc-leaf); text-decoration: none; font-weight: 700; white-space: nowrap; }
+    .hu-jump:hover { text-decoration: underline; }
+
     /* ── TOTAL BOX ── */
     .total-box {
       background: linear-gradient(135deg, var(--xc-jungle) 0%, #022AC0 100%);
@@ -583,7 +603,8 @@
   <div class="nav-inner">
     <div class="nav-brand">Agentforce · Estimación</div>
     <ul class="nav-tabs">
-      <li><button class="active" onclick="showPage('p1',this)">Flujo 1 — Fotografías</button></li>
+      <li><button class="active" onclick="showPage('p0',this)">Inicio</button></li>
+      <li><button onclick="showPage('p1',this)">Flujo 1 — Fotografías</button></li>
       <li><button onclick="showPage('p2',this)">Flujo 2 — Pickup</button></li>
       <li><button onclick="showPage('p3',this)">Identificación del Cliente</button></li>
       <li><button onclick="showPage('p5',this)">Seguimiento de Casos</button></li>
@@ -617,9 +638,86 @@
 
 
 <!-- ══════════════════════════════════════════════════════════════════
+     PAGE 0 — INICIO: RESUMEN GENERAL DE CONSUMO
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="p0" class="page active">
+<div class="page-inner">
+
+  <h1>Resumen General de Consumo</h1>
+  <p class="subtitle">
+    <span class="badge">Agentforce</span>
+    <span class="badge badge-dc">Data Cloud</span>
+    Vista consolidada de los 4 flujos analizados para Xcaret — exploración filtrable por flujo, HU y tipo de consumo
+  </p>
+
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">Flujo</span>
+      <div class="dd-check" data-dd="flujo">
+        <button type="button" class="dd-check-btn" data-dd-btn="flujo" aria-haspopup="true" aria-expanded="false">
+          <span class="dd-check-summary" data-dd-summary="flujo">Todos</span>
+          <span class="dd-check-arrow">▾</span>
+        </button>
+        <div class="dd-check-panel" data-dd-panel="flujo"><!-- generado por JS --></div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Tipo de consumo</span>
+      <div class="dd-check" data-dd="tipo">
+        <button type="button" class="dd-check-btn" data-dd-btn="tipo" aria-haspopup="true" aria-expanded="false">
+          <span class="dd-check-summary" data-dd-summary="tipo">Todos</span>
+          <span class="dd-check-arrow">▾</span>
+        </button>
+        <div class="dd-check-panel" data-dd-panel="tipo"><!-- generado por JS --></div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label"><label for="filter-hu">Buscar HU</label></span>
+      <input type="text" id="filter-hu" class="filter-input" placeholder="Ej. HU28, Req4-HU40, correo...">
+    </div>
+    <button id="filter-reset" class="filter-reset-btn" type="button">Limpiar filtros</button>
+  </div>
+
+  <div class="callout">
+    <strong>Nota sobre la base de cálculo:</strong> Flujo 1 y Flujo 2 usan el promedio blended confirmado con Nuvalia (% de escenarios).
+    Identificación del Cliente y Seguimiento de Casos usan un blended <strong>propuesto</strong> (mismo método, % aún sin confirmar por Nuvalia) —
+    ver <em>Preguntas Pendientes</em> para el detalle de lo que falta validar.
+  </div>
+
+  <hr class="div">
+
+  <!-- TABLE -->
+  <h2>Explorar Consumo por HU</h2>
+
+  <p id="filter-count" style="font-size:0.85rem;color:var(--muted);margin:0.9rem 0;"></p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Flujo</th>
+        <th>HU</th>
+        <th>Descripción / Paso</th>
+        <th>Tipo de acción</th>
+        <th>Créd. Prod</th>
+        <th>Créd. Sandbox</th>
+        <th>Data Cloud</th>
+        <th>Camino</th>
+      </tr>
+    </thead>
+    <tbody id="hu-table-body"><!-- generado por JS --></tbody>
+  </table>
+  </div>
+
+</div>
+</div><!-- /p0 -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════
      PAGE 1 — FLUJO 1: FOTOGRAFÍAS DE VISITA
 ═══════════════════════════════════════════════════════════════════════ -->
-<div id="p1" class="page active">
+<div id="p1" class="page">
 <div class="page-inner">
 
   <h1>Flujo 1 — Soporte de Fotografías de Visita</h1>
@@ -632,7 +730,7 @@
   <!-- DIAGRAM -->
   <div class="diagram-wrap">
     <div class="diagram-container" id="diag1">
-      <img src="flujo1.png" alt="Diagrama Flujo 1 — Soporte Fotografías de Visita">
+      <img src="Flujos AFD360/flujo1.png" alt="Diagrama Flujo 1 — Soporte Fotografías de Visita">
 
       <!-- HU50+51+58: clasificación + query CRM, box superior izquierdo -->
       <div class="hs tip-right" style="left:6%;top:12%;width:18%;height:14%;" data-rows="row-HU50,row-HU51,row-HU58">
@@ -1118,7 +1216,7 @@
 
   <div class="diagram-wrap">
     <div class="diagram-container" id="diag2">
-      <img src="flujo2.png" alt="Diagrama Flujo 2 — Consulta de Pickup / Transporte">
+      <img src="Flujos AFD360/flujo2.png" alt="Diagrama Flujo 2 — Consulta de Pickup / Transporte">
 
       <!-- HU62: clasificación de intención -->
       <div class="hs tip-right" style="left:3%;top:7%;width:12%;height:14%;" data-rows="row-HU62">
@@ -1769,6 +1867,13 @@
         <td class="cr">60</td><td class="cr">48</td>
         <td>—</td>
       </tr>
+      <tr class="hl-green">
+        <td><strong>Estimación blended (~4 acciones promedio)</strong></td>
+        <td>Ponderado (propuesto): 70% Camino A · 15% Camino B sin Perfil Unificado · 10% Camino B con Perfil Unificado · 5% caso especial</td>
+        <td>~4</td>
+        <td class="cr">~78</td><td class="cr">~62</td>
+        <td>—<br><span style="font-size:0.78rem;color:var(--muted);">Confirmado: sin cargo de Data Cloud</span></td>
+      </tr>
     </tbody>
   </table>
   </div>
@@ -1779,7 +1884,14 @@
     A partir de ahí, el costo escala según el desenlace: <strong>60 cr</strong> si hay transferencia simple o atención fuera de horario,
     <strong>80 cr</strong> si el cliente se autentica y consulta sus productos/reservas, y hasta <strong>100 cr</strong> si además se consulta el Perfil Unificado antes de escalar.
     El cliente confirmó que no utiliza Data 360 para unificación de perfiles, por lo que esa consulta no agrega Data Service Credits — todo el costo es en Flex Credits de Agentforce.
-    Nuvalia aún no ha compartido el % esperado de conversaciones por escenario — ver <em>Preguntas Pendientes</em>.
+  </div>
+
+  <div class="insight">
+    <strong>Lógica blended (estimación propuesta, pendiente de confirmar con Nuvalia):</strong>
+    Se asume ~70% Camino A (autenticación exitosa + consulta + correo, 4 acciones · 80 cr), ~15% Camino B sin Perfil Unificado (3 acciones · 60 cr),
+    ~10% Camino B con Perfil Unificado (5 acciones · 100 cr) y ~5% caso especial fuera de horario (3 acciones · 60 cr).
+    Promedio ponderado: <strong>~4 acciones · ~78 créditos prod por conversación</strong> (~62 cr sandbox).
+    Nuvalia aún no ha compartido el % real de conversaciones por escenario — ver <em>Preguntas Pendientes</em> para pedir su confirmación/corrección.
   </div>
 
   <div class="callout">
@@ -1934,9 +2046,9 @@
   <!-- SECTION 5: PROYECCIÓN MENSUAL -->
   <h2>5. Proyección Mensual de Créditos</h2>
   <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.2rem;">
-    Toda conversación cuesta al menos 60 créditos (identificación + registro de estado + escalación o caso fuera de horario).
-    Las columnas muestran los dos extremos del rango: <strong>80 cr</strong> (Camino A o transferencia simple con consulta) y <strong>100 cr</strong> (transferencia con consulta a Perfil Unificado).
-    Nuvalia aún no ha confirmado el % de conversaciones por escenario, por lo que no se presenta un blended ponderado — ver <em>Preguntas Pendientes</em>.
+    Basada en el blended propuesto de ~4 acciones · <strong>~78 créditos por conversación</strong> en producción (~62 cr sandbox).
+    Las columnas de la derecha muestran los dos extremos del rango real: <strong>60 cr</strong> (transferencia simple o caso fuera de horario) y <strong>100 cr</strong> (transferencia con consulta a Perfil Unificado).
+    El blended es una estimación propuesta — Nuvalia aún no ha confirmado el % real de conversaciones por escenario, ver <em>Preguntas Pendientes</em>.
   </p>
 
   <div class="tbl-wrap">
@@ -1944,60 +2056,60 @@
     <thead>
       <tr>
         <th>Conversaciones / mes</th>
-        <th>Créditos Prod (80 cr/conv)</th>
-        <th>Créditos Sandbox (64 cr/conv)</th>
-        <th>Créditos Prod (100 cr/conv — con Perfil Unificado)</th>
-        <th>Créditos Sandbox (80 cr/conv)</th>
+        <th>Créditos Prod (~78 cr/conv blended)</th>
+        <th>Créditos Sandbox (~62 cr/conv blended)</th>
+        <th>Créditos Prod — mínimo puro (60 cr)</th>
+        <th>Créditos Prod — máximo puro (100 cr — con Perfil Unificado)</th>
         <th>Data Service Credits</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>500</td>
-        <td class="cr">40,000</td>
-        <td>32,000</td>
-        <td class="cr">50,000</td>
-        <td>40,000</td>
+        <td class="cr">39,000</td>
+        <td>31,000</td>
+        <td>30,000</td>
+        <td>50,000</td>
         <td>—</td>
       </tr>
       <tr>
         <td>1,000</td>
-        <td class="cr">80,000</td>
-        <td>64,000</td>
-        <td class="cr">100,000</td>
-        <td>80,000</td>
+        <td class="cr">78,000</td>
+        <td>62,000</td>
+        <td>60,000</td>
+        <td>100,000</td>
         <td>—</td>
       </tr>
       <tr>
         <td>5,000</td>
-        <td class="cr">400,000</td>
-        <td>320,000</td>
-        <td class="cr">500,000</td>
-        <td>400,000</td>
+        <td class="cr">390,000</td>
+        <td>310,000</td>
+        <td>300,000</td>
+        <td>500,000</td>
         <td>—</td>
       </tr>
       <tr class="hl-blue">
         <td>10,000</td>
-        <td class="cr">800,000</td>
-        <td>640,000</td>
-        <td class="cr">1,000,000</td>
-        <td>800,000</td>
+        <td class="cr">780,000</td>
+        <td>620,000</td>
+        <td>600,000</td>
+        <td>1,000,000</td>
         <td>—</td>
       </tr>
       <tr>
         <td>25,000</td>
-        <td class="cr">2,000,000</td>
-        <td>1,600,000</td>
-        <td class="cr">2,500,000</td>
-        <td>2,000,000</td>
+        <td class="cr">1,950,000</td>
+        <td>1,550,000</td>
+        <td>1,500,000</td>
+        <td>2,500,000</td>
         <td>—</td>
       </tr>
       <tr>
         <td>50,000</td>
-        <td class="cr">4,000,000</td>
-        <td>3,200,000</td>
-        <td class="cr">5,000,000</td>
-        <td>4,000,000</td>
+        <td class="cr">3,900,000</td>
+        <td>3,100,000</td>
+        <td>3,000,000</td>
+        <td>5,000,000</td>
         <td>—</td>
       </tr>
     </tbody>
@@ -2254,6 +2366,13 @@
         <td class="cr">20 a 40</td><td class="cr">16 a 32</td>
         <td>—</td>
       </tr>
+      <tr class="hl-green">
+        <td><strong>Estimación blended (~1 acción promedio)</strong></td>
+        <td>Ponderado (propuesto): 70% sin escalamiento · 25% con transferencia · 5% caso no localizado</td>
+        <td>~1</td>
+        <td class="cr">~25</td><td class="cr">~20</td>
+        <td>—</td>
+      </tr>
     </tbody>
   </table>
   </div>
@@ -2263,6 +2382,13 @@
     El flujo no limita cuántos casos distintos puede consultar un cliente en la misma sesión.
     Cada ejecución de HU40 (consultar expediente) suma <strong>20 cr</strong> adicionales, por lo que el consumo real depende del promedio de consultas por conversación.
     Esta estimación usa <strong>1 consulta</strong> como supuesto base — ajustar con un multiplicador cuando se tenga visibilidad del promedio real.
+  </div>
+
+  <div class="insight">
+    <strong>Lógica blended (estimación propuesta, pendiente de confirmar con Nuvalia):</strong>
+    Se asume ~70% consulta de estatus exitosa sin escalamiento (1 acción · 20 cr), ~25% consulta con transferencia a ejecutivo (2 acciones · 40 cr)
+    y ~5% caso no localizado (tratado como 1 acción · 20 cr, supuesto conservador — ver <em>Preguntas Pendientes</em>).
+    Promedio ponderado: <strong>~1 acción · ~25 créditos prod por conversación</strong> (~20 cr sandbox).
   </div>
 
   <div class="callout">
@@ -2381,7 +2507,9 @@
   <!-- SECTION 5: PROYECCIÓN MENSUAL -->
   <h2>5. Proyección Mensual de Créditos</h2>
   <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.2rem;">
-    Basada en 1 consulta por conversación (supuesto base). Si el promedio real de consultas por sesión es mayor a 1, multiplicar las columnas de 20/16 cr proporcionalmente.
+    Basada en el blended propuesto de ~1 acción · <strong>~25 créditos por conversación</strong> en producción (~20 cr sandbox), asumiendo 1 consulta de expediente por conversación.
+    Las columnas de la derecha muestran los dos extremos puros: <strong>20 cr</strong> (sin escalamiento) y <strong>40 cr</strong> (con transferencia).
+    Si el promedio real de consultas por sesión es mayor a 1, multiplicar todas las columnas proporcionalmente — ver <em>Preguntas Pendientes</em>.
   </p>
 
   <div class="tbl-wrap">
@@ -2389,60 +2517,60 @@
     <thead>
       <tr>
         <th>Conversaciones / mes</th>
-        <th>Créditos Prod (20 cr/conv — sin transferencia)</th>
-        <th>Créditos Sandbox (16 cr/conv)</th>
-        <th>Créditos Prod (40 cr/conv — con transferencia)</th>
-        <th>Créditos Sandbox (32 cr/conv)</th>
+        <th>Créditos Prod (~25 cr/conv blended)</th>
+        <th>Créditos Sandbox (~20 cr/conv blended)</th>
+        <th>Créditos Prod — puro sin transferencia (20 cr)</th>
+        <th>Créditos Prod — puro con transferencia (40 cr)</th>
         <th>Data Service Credits</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>500</td>
-        <td class="cr">10,000</td>
-        <td>8,000</td>
-        <td class="cr">20,000</td>
-        <td>16,000</td>
+        <td class="cr">12,500</td>
+        <td>10,000</td>
+        <td>10,000</td>
+        <td>20,000</td>
         <td>—</td>
       </tr>
       <tr>
         <td>1,000</td>
-        <td class="cr">20,000</td>
-        <td>16,000</td>
-        <td class="cr">40,000</td>
-        <td>32,000</td>
+        <td class="cr">25,000</td>
+        <td>20,000</td>
+        <td>20,000</td>
+        <td>40,000</td>
         <td>—</td>
       </tr>
       <tr>
         <td>5,000</td>
-        <td class="cr">100,000</td>
-        <td>80,000</td>
-        <td class="cr">200,000</td>
-        <td>160,000</td>
+        <td class="cr">125,000</td>
+        <td>100,000</td>
+        <td>100,000</td>
+        <td>200,000</td>
         <td>—</td>
       </tr>
       <tr class="hl-blue">
         <td>10,000</td>
-        <td class="cr">200,000</td>
-        <td>160,000</td>
-        <td class="cr">400,000</td>
-        <td>320,000</td>
+        <td class="cr">250,000</td>
+        <td>200,000</td>
+        <td>200,000</td>
+        <td>400,000</td>
         <td>—</td>
       </tr>
       <tr>
         <td>25,000</td>
-        <td class="cr">500,000</td>
-        <td>400,000</td>
-        <td class="cr">1,000,000</td>
-        <td>800,000</td>
+        <td class="cr">625,000</td>
+        <td>500,000</td>
+        <td>500,000</td>
+        <td>1,000,000</td>
         <td>—</td>
       </tr>
       <tr>
         <td>50,000</td>
-        <td class="cr">1,000,000</td>
-        <td>800,000</td>
-        <td class="cr">2,000,000</td>
-        <td>1,600,000</td>
+        <td class="cr">1,250,000</td>
+        <td>1,000,000</td>
+        <td>1,000,000</td>
+        <td>2,000,000</td>
         <td>—</td>
       </tr>
     </tbody>
@@ -2554,7 +2682,11 @@
       </li>
       <li>
         ¿Qué % de conversaciones del proceso de Identificación del Cliente termina en cada escenario (autenticación exitosa, transferencia simple, transferencia con Perfil Unificado, atención fuera de horario)?
-        <div class="q-why">Sin esta distribución no es posible calcular un costo blended por conversación, como sí se hizo en los Flujos 1 y 2.</div>
+        <div class="q-why">Mientras se confirma, la página usa una distribución propuesta (70% / 15% / 10% / 5%) para calcular un blended de ~78 cr/conv — igual que se hizo con los Flujos 1 y 2, pero sin confirmar con Nuvalia. Pedimos validar o corregir estos porcentajes.</div>
+      </li>
+      <li>
+        ¿Qué % de conversaciones de Seguimiento de Casos termina sin escalamiento vs. con transferencia a ejecutivo, y qué tan frecuente es el caso "no localizado"?
+        <div class="q-why">Mientras se confirma, la página usa una distribución propuesta (70% / 25% / 5%) para calcular un blended de ~25 cr/conv. Pedimos validar o corregir estos porcentajes.</div>
       </li>
       <li>
         En Seguimiento de Casos (Req4-HU39), ¿la solicitud del número de caso valida solo el formato en memoria de sesión, o también verifica su existencia contra Salesforce antes de continuar?
@@ -2616,6 +2748,227 @@
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
   }
+
+  function goToRow(pageId, rowId) {
+    const btn = document.querySelector('.nav-tabs button[onclick*="\'' + pageId + '\'"]');
+    if (btn) showPage(pageId, btn);
+    setTimeout(function () {
+      const target = document.getElementById(rowId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.classList.add('row-highlight');
+        setTimeout(function () { target.classList.remove('row-highlight'); }, 2000);
+      }
+    }, 60);
+  }
+
+  // ── PAGE 0: RESUMEN GENERAL DE CONSUMO ──
+  (function () {
+    const FLOW_SUMMARY = [
+      { key: 'f1', label: 'Flujo 1 — Soporte de Fotografías de Visita', basis: 'Blended confirmado: ~50% Camino A · 40% Camino B · 10% escalación', credProd: 60000, credSandbox: 48000, dataCloud: true, dataCloudNote: '~2 cr / millón de filas vía HU53 (solo Camino B)' },
+      { key: 'f2', label: 'Flujo 2 — Consulta de Pickup / Transporte', basis: 'Blended confirmado: 80% Camino A · 20% Camino B', credProd: 64000, credSandbox: 51000, dataCloud: true, dataCloudNote: '~2 cr / millón de filas vía HU63 (ambos caminos)' },
+      { key: 'f3', label: 'Identificación del Cliente (Autenticación y Continuidad)', basis: 'Blended propuesto (~4 acciones): 70% Camino A · 15% Camino B sin Perfil Unificado · 10% Camino B con Perfil Unificado · 5% caso especial — % pendiente de confirmar con Nuvalia', credProd: 78000, credSandbox: 62000, dataCloud: false, dataCloudNote: 'Confirmado: sin cargo de Data Cloud (Perfil Unificado = Xapi Profile, directo a Core CRM)' },
+      { key: 'f5', label: 'Seguimiento de Casos o Trámites', basis: 'Blended propuesto (~1 acción): 70% sin escalamiento · 25% con transferencia · 5% caso no localizado — % pendiente de confirmar con Nuvalia; no incluye consultas repetidas por sesión', credProd: 25000, credSandbox: 20000, dataCloud: false, dataCloudNote: 'Sin consumo confirmado de Data Cloud' },
+    ];
+
+    const HU_DATA = [
+      // Flujo 1 — Fotografías
+      { flujo: 'f1', hu: 'HU50', desc: 'Detectar intención de fotografía', tipo: 'Standard Agent Action (clasificación)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU50', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU51', desc: 'Consultar casos previos en Salesforce', tipo: 'Standard Agent Action (query CRM)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU51', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU53', desc: 'Responder con info base (Knowledge)', tipo: 'Standard Agent Action (Knowledge)', credProd: 20, credSandbox: 16, dataCloud: true, dataCloudNote: '~2 cr / M filas', camino: '🟨 Camino B', rowId: 'row-HU53', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU54', desc: 'Crear nuevo caso tipo Fotografía', tipo: 'Standard Agent Action (create record)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟨 Camino B', rowId: 'row-HU54', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU61', desc: 'Transferencia a humano', tipo: 'Standard Agent Action (handoff)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos (condicional)', rowId: 'row-HU61', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU58', desc: 'Evitar duplicidad de solicitudes', tipo: 'Lógica condicional sobre HU51', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU58', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU52', desc: 'Informar estatus si existe caso previo', tipo: 'Sin costo — respuesta en el mismo turno', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟩 Camino A', rowId: 'row-HU52', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU55', desc: 'Asignar caso a cola Fotografía', tipo: 'Sin costo — automatización background', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟨 Camino B', rowId: 'row-HU55', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU56', desc: 'Informar número de solicitud', tipo: 'Sin costo — respuesta en el mismo turno', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟨 Camino B', rowId: 'row-HU56', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU57/HU60', desc: 'Registrar historial / trazabilidad', tipo: 'Sin costo — logging de sesión', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU57', pageId: 'p1' },
+      { flujo: 'f1', hu: 'HU59', desc: 'Restricción: no envío de archivos', tipo: 'Sin costo — guardrail del Topic', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU59', pageId: 'p1' },
+
+      // Flujo 2 — Pickup
+      { flujo: 'f2', hu: 'HU62', desc: 'Detectar intención de confirmación pickup', tipo: 'Standard Agent Action (clasificación)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU62', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU63', desc: 'Validar autenticación del cliente', tipo: 'Standard Agent Action (verificación identidad)', credProd: 20, credSandbox: 16, dataCloud: true, dataCloudNote: '~2 cr / M filas', camino: '🟦 Ambos', rowId: 'row-HU63', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU65', desc: 'Consultar reservas activas', tipo: 'Standard Agent Action (query CRM)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU65', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU70', desc: 'Crear caso (solo si hay transferencia)', tipo: 'Standard Agent Action (create record)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟥 Camino B', rowId: 'row-HU70', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU72', desc: 'Transferencia contextual a ejecutivo', tipo: 'Standard Agent Action (handoff)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟥 Camino B', rowId: 'row-HU72', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU64', desc: 'Solicitar/confirmar datos de reserva', tipo: 'Sin costo — recolección de slots', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU64', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU66', desc: 'Mostrar fecha y detalle del servicio', tipo: 'Sin costo — respuesta en el mismo turno', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟩 Camino A', rowId: 'row-HU66', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU68', desc: 'Mantener contexto conversacional', tipo: 'Sin costo — memoria de sesión', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU68', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU69', desc: 'Manejo de reserva no localizada', tipo: 'Sin costo — lógica condicional', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟥 Camino B', rowId: 'row-HU69', pageId: 'p2' },
+      { flujo: 'f2', hu: 'HU71', desc: 'Registrar historial de consulta', tipo: 'Sin costo — logging de auditoría', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU71', pageId: 'p2' },
+
+      // Identificación del Cliente
+      { flujo: 'f3', hu: 'Rq3-HU19', desc: 'Identificación automática por número (WhatsApp)', tipo: 'Standard Agent Action (búsqueda CRM)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU19', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU20', desc: 'Identificación por correo electrónico', tipo: 'Standard Agent Action (búsqueda CRM)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU20', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU23.2', desc: 'Atención fuera de horario y generación de caso', tipo: 'Standard Agent Action (create record)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟧 Caso especial', rowId: 'row-HU232', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU24', desc: 'Registrar estado de autenticación del cliente', tipo: 'Standard Agent Action (update record)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU24', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU25', desc: 'Consultar productos o compras activas', tipo: 'Standard Agent Action (query CRM)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟩 Camino A', rowId: 'row-HU25', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU26', desc: 'Ofrecer envío de detalle por correo electrónico', tipo: 'Standard Agent Action (Flow/Apex)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟩 Camino A', rowId: 'row-HU26', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU27', desc: 'Transferir a ejecutivo humano por excepción', tipo: 'Standard Agent Action (handoff + create record)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟥 Camino B', rowId: 'row-HU27', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU28/28.1', desc: 'Consultar Perfil Unificado / Xapi Profile', tipo: 'Standard Agent Action (query CRM)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos (opcional)', rowId: 'row-HU28', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU18', desc: 'Determinar método de identificación según canal', tipo: 'Lógica de enrutamiento', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU18', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU20.5', desc: 'Identificación con más de un correo asociado', tipo: 'Reutiliza resultado de HU20', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU205', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU21', desc: 'Validar consentimiento (Opt-In)', tipo: 'Lectura de campo ya consultado', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU21', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU22', desc: 'Gestionar autenticación fallida por no coincidencia', tipo: 'Sin costo — respuesta en el mismo turno', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟥 Camino B', rowId: 'row-HU22', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU23', desc: 'Gestionar fallas por respuestas incorrectas o evasión', tipo: 'Sin costo — conteo en memoria de sesión', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟥 Camino B', rowId: 'row-HU23', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU23.1', desc: 'Configuración de vigencia de conversación', tipo: 'Sin costo — parámetro de configuración', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU231', pageId: 'p3' },
+      { flujo: 'f3', hu: 'Rq3-HU29', desc: 'Registrar trazabilidad completa del proceso', tipo: 'Sin costo — logging de auditoría', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-HU29', pageId: 'p3' },
+
+      // Seguimiento de Casos
+      { flujo: 'f5', hu: 'Req4-HU40', desc: 'Consultar expediente en objeto Case', tipo: 'Standard Agent Action (query CRM)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-req4-HU40', pageId: 'p5' },
+      { flujo: 'f5', hu: 'Req4-HU70', desc: 'Crear caso únicamente cuando exista transferencia', tipo: 'Standard Agent Action (create record)', credProd: 20, credSandbox: 16, dataCloud: false, camino: '🟥 Transferencia', rowId: 'row-req4-HU70', pageId: 'p5' },
+      { flujo: 'f5', hu: 'Req4-HU38', desc: 'Detectar intención de seguimiento de caso o trámite', tipo: 'Sin costo — lógica conversacional', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-req4-HU38', pageId: 'p5' },
+      { flujo: 'f5', hu: 'Req4-HU39', desc: 'Solicitar número oficial de caso para identificación', tipo: 'Sin costo — validación de formato en sesión', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-req4-HU39', pageId: 'p5' },
+      { flujo: 'f5', hu: 'Req4-HU41', desc: 'Informar estatus actual del caso al cliente', tipo: 'Sin costo — respuesta en el mismo turno', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-req4-HU41', pageId: 'p5' },
+      { flujo: 'f5', hu: 'Req4-HU68', desc: 'Mantener contexto conversacional sobre el caso consultado', tipo: 'Sin costo — memoria de sesión', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-req4-HU68', pageId: 'p5' },
+      { flujo: 'f5', hu: 'Req4-HU69', desc: 'Manejo de caso no localizado', tipo: 'Por confirmar — 0 cr (supuesto)', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟧 Por confirmar', rowId: 'row-req4-HU69', pageId: 'p5' },
+      { flujo: 'f5', hu: 'Req4-HU72', desc: 'Transferencia contextual a ejecutivo humano', tipo: 'Sin costo — detección de intención', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟥 Transferencia', rowId: 'row-req4-HU72', pageId: 'p5' },
+      { flujo: 'f5', hu: 'Req4-HU71', desc: 'Registrar historial de consulta de caso', tipo: 'Sin costo — logging de auditoría', credProd: 0, credSandbox: 0, dataCloud: false, camino: '🟦 Ambos', rowId: 'row-req4-HU71', pageId: 'p5' },
+    ];
+
+    const FLOW_LABELS = {};
+    FLOW_SUMMARY.forEach(function (f) { FLOW_LABELS[f.key] = f.label; });
+
+    const TIPO_OPTIONS = [
+      { value: 'agentforce', label: '🔷 Agentforce (Flex Credits)' },
+      { value: 'datacloud', label: '🔵 Data Cloud (Data Service Credits)' },
+      { value: 'ninguno', label: '⚪ Sin costo' }
+    ];
+
+    const DD_ITEMS = {};
+    const DD_STATE = {};
+
+    function buildCheckDropdown(key, items) {
+      DD_ITEMS[key] = items;
+      DD_STATE[key] = items.map(function (i) { return i.value; });
+      const panel = document.querySelector('[data-dd-panel="' + key + '"]');
+      panel.innerHTML =
+        '<label class="dd-check-item dd-check-all">' +
+          '<input type="checkbox" data-dd-all="' + key + '" checked> Seleccionar todos' +
+        '</label>' +
+        items.map(function (i) {
+          return '<label class="dd-check-item">' +
+            '<input type="checkbox" data-dd-item="' + key + '" value="' + i.value + '" checked> ' + i.label +
+            '</label>';
+        }).join('');
+      updateSummary(key);
+    }
+
+    function updateSummary(key) {
+      const items = DD_ITEMS[key];
+      const selected = DD_STATE[key];
+      const summary = document.querySelector('[data-dd-summary="' + key + '"]');
+      if (selected.length === items.length) {
+        summary.textContent = 'Todos';
+      } else if (selected.length === 0) {
+        summary.textContent = 'Ninguno';
+      } else if (selected.length === 1) {
+        let label = selected[0];
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].value === selected[0]) { label = items[i].label; break; }
+        }
+        summary.textContent = label;
+      } else {
+        summary.textContent = selected.length + ' seleccionados';
+      }
+    }
+
+    function syncDropdownState(key) {
+      const panel = document.querySelector('[data-dd-panel="' + key + '"]');
+      const boxes = Array.from(panel.querySelectorAll('[data-dd-item="' + key + '"]'));
+      const selected = boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.value; });
+      DD_STATE[key] = selected;
+      panel.querySelector('[data-dd-all="' + key + '"]').checked = selected.length === boxes.length;
+      updateSummary(key);
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.dd-check.open').forEach(function (el) { el.classList.remove('open'); });
+    }
+
+    function currentFilters() {
+      return {
+        flujos: DD_STATE.flujo || [],
+        tipos: DD_STATE.tipo || [],
+        search: document.getElementById('filter-hu').value.trim().toLowerCase()
+      };
+    }
+
+    function matchesTipo(row, tipos) {
+      if (tipos.indexOf('agentforce') !== -1 && row.credProd > 0) return true;
+      if (tipos.indexOf('datacloud') !== -1 && row.dataCloud) return true;
+      if (tipos.indexOf('ninguno') !== -1 && row.credProd === 0) return true;
+      return false;
+    }
+
+    function filteredRows(f) {
+      return HU_DATA.filter(function (r) {
+        return f.flujos.indexOf(r.flujo) !== -1 &&
+          matchesTipo(r, f.tipos) &&
+          (f.search === '' || r.hu.toLowerCase().indexOf(f.search) !== -1 || r.desc.toLowerCase().indexOf(f.search) !== -1);
+      });
+    }
+
+    function renderTable() {
+      const f = currentFilters();
+      const rows = filteredRows(f);
+      document.getElementById('filter-count').textContent = rows.length + ' de ' + HU_DATA.length + ' HUs';
+      document.getElementById('hu-table-body').innerHTML = rows.map(function (r) {
+        return '<tr>' +
+          '<td>' + FLOW_LABELS[r.flujo] + '</td>' +
+          '<td><strong>' + r.hu + '</strong><br><a href="javascript:void(0)" class="hu-jump" onclick="goToRow(\'' + r.pageId + '\',\'' + r.rowId + '\')">Ver detalle →</a></td>' +
+          '<td>' + r.desc + '</td>' +
+          '<td>' + r.tipo + '</td>' +
+          '<td class="' + (r.credProd > 0 ? 'cr' : 'free') + '">' + r.credProd + '</td>' +
+          '<td class="' + (r.credSandbox > 0 ? 'cr' : 'free') + '">' + r.credSandbox + '</td>' +
+          '<td>' + (r.dataCloud ? '<span class="cr-blue">Sí — ' + (r.dataCloudNote || '') + '</span>' : '—') + '</td>' +
+          '<td>' + r.camino + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    function resetFilters() {
+      ['flujo', 'tipo'].forEach(function (key) {
+        const panel = document.querySelector('[data-dd-panel="' + key + '"]');
+        Array.from(panel.querySelectorAll('[data-dd-item="' + key + '"]')).forEach(function (b) { b.checked = true; });
+        panel.querySelector('[data-dd-all="' + key + '"]').checked = true;
+        syncDropdownState(key);
+      });
+      document.getElementById('filter-hu').value = '';
+      renderTable();
+    }
+
+    buildCheckDropdown('flujo', FLOW_SUMMARY.map(function (f) { return { value: f.key, label: f.label }; }));
+    buildCheckDropdown('tipo', TIPO_OPTIONS);
+    renderTable();
+
+    document.querySelectorAll('[data-dd-btn]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const wrap = btn.closest('.dd-check');
+        const isOpen = wrap.classList.contains('open');
+        closeAllDropdowns();
+        if (!isOpen) wrap.classList.add('open');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.dd-check')) closeAllDropdowns();
+    });
+    document.addEventListener('change', function (e) {
+      const target = e.target;
+      if (target.matches('[data-dd-all]')) {
+        const key = target.getAttribute('data-dd-all');
+        const panel = target.closest('.dd-check-panel');
+        Array.from(panel.querySelectorAll('[data-dd-item="' + key + '"]')).forEach(function (b) { b.checked = target.checked; });
+        syncDropdownState(key);
+        renderTable();
+      } else if (target.matches('[data-dd-item]')) {
+        syncDropdownState(target.getAttribute('data-dd-item'));
+        renderTable();
+      }
+    });
+    document.getElementById('filter-hu').addEventListener('input', renderTable);
+    document.getElementById('filter-reset').addEventListener('click', resetFilters);
+  })();
 
   // ── HOTSPOT TOOLTIPS — posicionamiento dinámico con position:fixed ──
   (function () {
