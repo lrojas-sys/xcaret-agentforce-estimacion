@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimación de Consumo — Agente Fotografía de Visita</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #f8f9fa;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 3rem;
+        }
+        h1 {
+            font-size: 1.6rem;
+            color: #032d60;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 1rem;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #032d60;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h3 {
+            font-size: 1rem;
+            color: #1b5e20;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        th {
+            background: #032d60;
+            color: #fff;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        tr:hover td {
+            background: #f0f7ff;
+        }
+        .summary-table th {
+            background: #1b5e20;
+        }
+        .highlight-row td {
+            background: #e8f5e9;
+            font-weight: 600;
+        }
+        .data-table th {
+            background: #4a148c;
+        }
+        .note {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+        .note strong {
+            color: #92400e;
+        }
+        .badge {
+            display: inline-block;
+            background: #032d60;
+            color: #fff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge-dc {
+            background: #4a148c;
+        }
+        .credits {
+            color: #1b5e20;
+            font-weight: 700;
+        }
+        .key-insight {
+            background: #f0f7ff;
+            border: 1px solid #bfdbfe;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .dc-insight {
+            background: #f3e5f5;
+            border: 1px solid #ce93d8;
+        }
+        .section-divider {
+            border: none;
+            border-top: 2px dashed #e5e7eb;
+            margin: 2.5rem 0;
+        }
+        .footer {
+            margin-top: 2.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        .total-box {
+            background: #032d60;
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        .total-box h3 {
+            color: #fff;
+            margin: 0 0 0.75rem 0;
+        }
+        .total-box table {
+            color: #fff;
+        }
+        .total-box th {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .total-box td {
+            border-bottom-color: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .total-box .credits {
+            color: #86efac;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Estimación de Consumo por Interacción</h1>
+        <p class="subtitle">Agente: <strong>Fotografía de Visita</strong> &nbsp; <span class="badge">Agentforce</span> &nbsp; <span class="badge badge-dc">Data Cloud</span></p>
+
+        <!-- SECTION 1: AGENTFORCE ACTIONS -->
+        <h2>1. Consumo de Acciones Agentforce</h2>
+
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Escenario</th>
+                    <th>Acciones</th>
+                    <th>Créditos (prod)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Caso previo existe</td>
+                    <td>3</td>
+                    <td class="credits">60</td>
+                </tr>
+                <tr>
+                    <td>Caso nuevo (sin previo)</td>
+                    <td>5</td>
+                    <td class="credits">100</td>
+                </tr>
+                <tr>
+                    <td>Escalación a humano</td>
+                    <td>+1</td>
+                    <td class="credits">+20</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td>Estimación blended</td>
+                    <td>~4</td>
+                    <td class="credits">~80</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            <strong>Tasa de conversión:</strong> 20 créditos por acción en producción, 16 créditos por acción en sandbox.
+        </div>
+
+        <h3>Path A — Caso previo encontrado (3 acciones)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Acción real</th>
+                    <th>HUs que cubre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Identificar intención (topic classification)</td>
+                    <td>HU 50</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Consultar casos previos del cliente en Salesforce</td>
+                    <td>HU 51 + HU 58</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Responder con estatus del caso</td>
+                    <td>HU 52</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Path B — Sin caso previo, crear nuevo (5 acciones)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Acción real</th>
+                    <th>HUs que cubre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Identificar intención</td>
+                    <td>HU 50</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Consultar casos previos (no encuentra)</td>
+                    <td>HU 51 + HU 58</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Buscar respuesta en knowledge base</td>
+                    <td>HU 53</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Crear caso + asignar a cola + tipificar + registrar trazabilidad (un solo Flow)</td>
+                    <td>HU 54 + HU 55 + HU 57 + HU 60</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Informar número de solicitud al cliente</td>
+                    <td>HU 56</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 2: DATA CLOUD QUERIES -->
+        <h2>2. Consumo de Data Cloud (Queries)</h2>
+
+        <p style="font-size: 0.9rem; margin-bottom: 1rem;">Si la arquitectura utiliza Data Cloud para unificar el perfil del cliente o consultar historial de casos, se generan queries adicionales que consumen créditos de Data Cloud.</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Query</th>
+                    <th>Cuándo ocurre</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Resolución de identidad del cliente (Identity Resolution)</td>
+                    <td>Inicio de conversación — identificar al cliente unificado</td>
+                    <td>Query</td>
+                </tr>
+                <tr>
+                    <td>Consulta de perfil unificado (Unified Profile lookup)</td>
+                    <td>Obtener datos consolidados del cliente para contexto</td>
+                    <td>Query</td>
+                </tr>
+                <tr>
+                    <td>Consulta de historial de casos/interacciones</td>
+                    <td>Buscar casos previos de fotografía asociados al cliente</td>
+                    <td>Query</td>
+                </tr>
+                <tr>
+                    <td>Consulta de segmento/elegibilidad</td>
+                    <td>Validar si el cliente tiene visita activa con derecho a fotografías</td>
+                    <td>Query</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="dc-insight key-insight">
+            <strong>Estimación de queries por interacción:</strong>
+            <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                <li><strong>Path A (caso existe):</strong> 2–3 queries (identidad + perfil + historial de casos)</li>
+                <li><strong>Path B (caso nuevo):</strong> 3–4 queries (identidad + perfil + historial + elegibilidad/segmento)</li>
+            </ul>
+            <p style="margin-top: 0.75rem;"><strong>Promedio:</strong> ~3 queries por conversación</p>
+        </div>
+
+        <div class="note">
+            <strong>Nota:</strong> El consumo de queries de Data Cloud depende de la implementación específica. Si las consultas de casos se hacen directamente a Salesforce CRM (SOQL) en lugar de a Data Cloud, el consumo de queries DC podría ser menor (1–2 por conversación, solo para resolución de identidad y perfil unificado). Confirmar con el equipo de arquitectura qué datos se consultan vía Data Cloud vs. SOQL directo.
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 3: TOTAL ESTIMATE -->
+        <div class="total-box">
+            <h3>3. Consumo Total Estimado por Conversación</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Componente</th>
+                        <th>Escenario A (caso existe)</th>
+                        <th>Escenario B (caso nuevo)</th>
+                        <th>Blended</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Acciones Agentforce</td>
+                        <td>3 acciones (60 cr)</td>
+                        <td>5 acciones (100 cr)</td>
+                        <td class="credits">~4 acciones (~80 cr)</td>
+                    </tr>
+                    <tr>
+                        <td>Queries Data Cloud</td>
+                        <td>2–3 queries</td>
+                        <td>3–4 queries</td>
+                        <td class="credits">~3 queries</td>
+                    </tr>
+                    <tr>
+                        <td>Escalación (si aplica)</td>
+                        <td>+1 acción (+20 cr)</td>
+                        <td>+1 acción (+20 cr)</td>
+                        <td class="credits">+20 cr (10% casos)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>4. Lógica de Consolidación</h2>
+        <div class="key-insight">
+            <strong>Acciones consolidadas:</strong> La creación del caso, asignación a cola, tipificación y registro de trazabilidad se ejecutan como <strong>un solo Flow invocado como una acción</strong>, no como 4–5 acciones separadas. La consulta de casos previos y la validación de duplicidad se resuelven en una sola query.
+        </div>
+
+        <div class="key-insight dc-insight">
+            <strong>Queries consolidadas:</strong> Si se utiliza Data Cloud, la resolución de identidad y la obtención del perfil unificado pueden consolidarse en 1–2 queries dependiendo del modelo de datos. Las queries de historial podrían ejecutarse directamente contra CRM si los casos no están ingestados en Data Cloud.
+        </div>
+
+        <div class="note">
+            <strong>HU 59</strong> (modo informativo sin envío automático de archivos) es un guardrail de comportamiento del agente, no una acción facturable ni una query.
+        </div>
+
+        <h2>5. Supuestos para Estimación Blended</h2>
+        <ul style="font-size: 0.9rem; padding-left: 1.5rem; margin-bottom: 1rem;">
+            <li>~40% de conversaciones encuentran un caso previo (Path A)</li>
+            <li>~50% de conversaciones requieren crear caso nuevo (Path B)</li>
+            <li>~10% incluyen escalación a humano</li>
+            <li>Data Cloud se utiliza para resolución de identidad y perfil unificado</li>
+            <li>Consultas de casos se realizan vía SOQL directo a Salesforce CRM</li>
+        </ul>
+
+        <div class="footer">
+            <p>Documento generado el 12 de agosto de 2026 &bull; Basado en el diagrama de proceso "Soporte Fotografías de Visita" y tasas de créditos Agentforce vigentes.</p>
+            <p style="margin-top: 0.5rem;"><strong>Acción pendiente:</strong> Confirmar con arquitectura si las queries de historial de casos van contra Data Cloud o directamente a CRM para ajustar la estimación de queries DC.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1847,18 +1847,18 @@
         <td>—<br><span style="font-size:0.78rem;color:var(--muted);">Sin consulta a Perfil Unificado</span></td>
       </tr>
       <tr>
-        <td><strong>Camino B — Transferencia a ejecutivo (sin Perfil Unificado)</strong></td>
-        <td>HU19/HU20, HU24, HU27</td>
-        <td>3</td>
-        <td class="cr">60</td><td class="cr">48</td>
+        <td><strong>Camino B1 — Transferencia con cliente identificado</strong> (Opt-in no válido / Cliente solicita humano)</td>
+        <td>HU19/HU20, HU24, HU27<br>+ opcional HU25, HU28<span style="font-size:0.78rem;color:var(--muted);"> (HU28 pendiente de confirmar — ver nota abajo)</span></td>
+        <td>3–5</td>
+        <td class="cr">60–100</td><td class="cr">48–80</td>
         <td>—</td>
       </tr>
-      <tr class="hl-green">
-        <td><strong>Camino B — Transferencia a ejecutivo (con Perfil Unificado)</strong></td>
-        <td>HU19/HU20, HU24, HU25, HU27, HU28</td>
-        <td>5</td>
-        <td class="cr">100</td><td class="cr">80</td>
-        <td>—<br><span style="font-size:0.78rem;color:var(--muted);">Confirmado: consulta directa a Core CRM, sin cargo de Data Cloud</span></td>
+      <tr>
+        <td><strong>Camino B2 — Transferencia por "No identificado" / Intentos excedidos</strong> (agota los 3 intentos de HU22/HU23, sin match en CRM)</td>
+        <td>HU19/HU20 (×1–3 intentos), HU27<br><span style="font-size:0.78rem;color:var(--muted);">Sin HU24 — no existe registro de cliente que actualizar; el detalle del intento se guarda en el Case creado por HU27</span></td>
+        <td>2–4</td>
+        <td class="cr">40–80</td><td class="cr">32–64</td>
+        <td>—</td>
       </tr>
       <tr>
         <td><strong>Caso especial — Atención fuera de horario</strong></td>
@@ -1869,29 +1869,33 @@
       </tr>
       <tr class="hl-green">
         <td><strong>Estimación blended (~4 acciones promedio)</strong></td>
-        <td>Ponderado (propuesto): 70% Camino A · 15% Camino B sin Perfil Unificado · 10% Camino B con Perfil Unificado · 5% caso especial</td>
+        <td>Ponderado (propuesto): 70% Camino A · 25% Camino B (B1 + B2) · 5% caso especial</td>
         <td>~4</td>
-        <td class="cr">~78</td><td class="cr">~62</td>
+        <td class="cr">~78*</td><td class="cr">~62*</td>
         <td>—<br><span style="font-size:0.78rem;color:var(--muted);">Confirmado: sin cargo de Data Cloud</span></td>
       </tr>
     </tbody>
   </table>
   </div>
+  <p style="font-size:0.8rem;color:var(--muted);">
+    * Pendiente de recalcular: el 25% de "Camino B" todavía no está repartido entre B1 (cliente identificado, 60–100 cr) y B2 ("No identificado"/Intentos excedidos, 40–80 cr según intentos) —
+    ver <em>Preguntas Pendientes</em>. Además, el extremo alto de B1 (100 cr) depende de que HU28 sea una acción de Agentforce — ver evaluación de HU28 abajo.
+  </p>
 
   <div class="insight">
     <strong>Rango de créditos por conversación:</strong>
-    Toda conversación incluye al menos 1 acción de identificación (HU19/HU20) + 1 de registro de estado (HU24) = 40 cr base.
-    A partir de ahí, el costo escala según el desenlace: <strong>60 cr</strong> si hay transferencia simple o atención fuera de horario,
-    <strong>80 cr</strong> si el cliente se autentica y consulta sus productos/reservas, y hasta <strong>100 cr</strong> si además se consulta el Perfil Unificado antes de escalar.
+    Toda conversación incluye al menos 1 acción de identificación (HU19/HU20). El registro de estado (HU24, +20 cr) solo aplica cuando sí hubo coincidencia en CRM (Camino A o B1) —
+    si el cliente agota los 3 intentos sin ninguna coincidencia (Camino B2), no hay Contact al cual escribirle ese estado; el detalle del intento queda en el Case que crea HU27.
+    A partir de ahí, el costo escala según el desenlace: <strong>40–80 cr</strong> si es "No identificado"/Intentos excedidos (según cuántos intentos con datos distintos), <strong>60 cr</strong> si el cliente identificado pide humano o tiene Opt-in no válido, o si hay atención fuera de horario,
+    <strong>80 cr</strong> si el cliente se autentica y consulta sus productos/reservas, y hasta <strong>100 cr</strong> si además se consulta el Perfil Unificado antes de escalar (sujeto a confirmar quién ejecuta HU28).
     El cliente confirmó que no utiliza Data 360 para unificación de perfiles, por lo que esa consulta no agrega Data Service Credits — todo el costo es en Flex Credits de Agentforce.
   </div>
 
   <div class="insight">
     <strong>Lógica blended (estimación propuesta, pendiente de confirmar con Nuvalia):</strong>
-    Se asume ~70% Camino A (autenticación exitosa + consulta + correo, 4 acciones · 80 cr), ~15% Camino B sin Perfil Unificado (3 acciones · 60 cr),
-    ~10% Camino B con Perfil Unificado (5 acciones · 100 cr) y ~5% caso especial fuera de horario (3 acciones · 60 cr).
+    Se asume ~70% Camino A (autenticación exitosa + consulta + correo, 4 acciones · 80 cr) y ~25% Camino B (B1 60–100 cr según sub-variante, B2 40–80 cr según intentos), y ~5% caso especial fuera de horario (3 acciones · 60 cr).
     Promedio ponderado: <strong>~4 acciones · ~78 créditos prod por conversación</strong> (~62 cr sandbox).
-    Nuvalia aún no ha compartido el % real de conversaciones por escenario — ver <em>Preguntas Pendientes</em> para pedir su confirmación/corrección.
+    Nuvalia aún no ha compartido el % real de conversaciones por escenario, ni el reparto entre B1/B2 — ver <em>Preguntas Pendientes</em> para pedir su confirmación/corrección.
   </div>
 
   <div class="callout">
@@ -1917,22 +1921,50 @@
   </table>
   </div>
 
-  <h3>Path B — Transferencia a ejecutivo humano (3 a 5 acciones)</h3>
+  <h3>Path B1 — Transferencia con cliente identificado (3 a 5 acciones)</h3>
+  <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.6rem;">
+    Si HU19/HU20 sí encuentran coincidencia, el flujo por defecto sigue hacia Camino A. B1 cubre los casos donde, pese a estar identificado, igual se transfiere: <strong>Opt-in no válido</strong> (no se puede mostrar información sensible) o <strong>Cliente solicita humano</strong> explícitamente.
+  </p>
   <div class="tbl-wrap">
   <table>
     <thead>
       <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>Intentar identificar al cliente según canal</td><td>HU18 + HU19/HU20</td><td>—</td></tr>
-      <tr><td>2</td><td>Registrar estado de autenticación (No identificado / Intentos excedidos / Cliente solicita humano)</td><td>HU24</td><td>—</td></tr>
-      <tr><td>3 opcional</td><td>Consultar productos/reservas antes de escalar (si ya estaba autenticado)</td><td>HU25</td><td>—</td></tr>
+      <tr><td>1</td><td>Identificar al cliente según canal (hay coincidencia en CRM)</td><td>HU18 + HU19/HU20</td><td>—</td></tr>
+      <tr><td>2</td><td>Registrar estado de autenticación (Opt-in no válido / Cliente solicita humano) sobre el registro ya encontrado</td><td>HU24</td><td>—</td></tr>
+      <tr><td>3 opcional</td><td>Consultar productos/reservas antes de escalar (variante extendida)</td><td>HU25</td><td>—</td></tr>
       <tr><td>4</td><td>Transferir a ejecutivo humano y crear Case con datos capturados</td><td>HU27</td><td>—</td></tr>
-      <tr><td>5 opcional</td><td>Consultar Perfil Unificado / Xapi Profile para homologar la respuesta antes de transferir</td><td>HU28 / HU28.1</td><td>—</td></tr>
-      <tr><td>—</td><td>Manejo de reintentos/evasión y registro de trazabilidad (sin costo)</td><td>HU22 + HU23 + HU29</td><td>—</td></tr>
+      <tr><td>5 opcional</td><td>Consultar Perfil Unificado / Xapi Profile para homologar la respuesta antes de transferir (variante extendida) — <strong>pendiente de confirmar quién ejecuta esta consulta</strong>, ver nota abajo</td><td>HU28 / HU28.1</td><td>—</td></tr>
+      <tr><td>—</td><td>Registro de trazabilidad (sin costo)</td><td>HU29</td><td>—</td></tr>
     </tbody>
   </table>
   </div>
+  <div class="insight" style="margin-top:0.6rem;">
+    <strong>Evaluación de HU28 (Consultar Perfil Unificado / Xapi Profile):</strong>
+    En el diagrama, el nodo de HU28 (paso 14) está dibujado <strong>después</strong> del nodo de HU27 "Transferir a ejecutivo humano" (paso 13), no antes. La descripción de HU28 dice "Respuesta se homologa <em>para el agente</em>" —
+    ambiguo entre "para el agente conversacional (Agentforce)" o "para el ejecutivo humano" que recibe el Case. Si la consulta ocurre <strong>después</strong> del handoff, es razonable que sea el <strong>ejecutivo humano</strong> quien la haga desde su propia consola de Salesforce —
+    en cuyo caso no sería una acción de Agentforce y no generaría los 20/16 cr adicionales que hoy se le atribuyen en la variante extendida de B1.
+    Esto está pendiente de confirmar con Nuvalia/diseño — ver <em>Preguntas Pendientes</em>.
+  </div>
+
+  <h3>Path B2 — Transferencia por "No identificado" / Intentos excedidos, sin match en CRM (2 a 4 acciones)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción real</th><th>HUs que cubre</th><th>Data Service Credits</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1 a 3</td><td>Intentar identificar al cliente según canal — 1 búsqueda en CRM por cada número/correo distinto que el cliente proporciona (máx. 3 intentos, contados por HU23)</td><td>HU18 + HU19/HU20 (repetido)</td><td>—</td></tr>
+      <tr><td>—</td><td><em>No aplica</em> — al no existir coincidencia, no hay registro de cliente sobre el cual actualizar el estado de autenticación</td><td>HU24 no aplica</td><td>—</td></tr>
+      <tr><td>4</td><td>Transferir a ejecutivo humano y crear Case con los datos capturados (número/correo intentados, motivo "No identificado")</td><td>HU27</td><td>—</td></tr>
+      <tr><td>—</td><td>Conteo de intentos, mensajes de reintento y registro de trazabilidad (sin costo)</td><td>HU22 + HU23 + HU29</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:0.8rem;color:var(--muted);">
+    El número real de intentos con datos distintos (vs. simples correcciones de formato del mismo dato) está pendiente de confirmar — ver <em>Preguntas Pendientes</em>.
+  </p>
 
   <hr class="div">
 
@@ -2716,12 +2748,14 @@
         <div class="q-why">Falta definir en qué punto del diagrama se resolvería esta ambigüedad, para saber si dispara o no una acción adicional.</div>
       </li>
       <li>
-        El diagrama valida el consentimiento (Opt-in) <strong>antes</strong> de cualquier intento de identificación, pero la tabla de HUs lista la identificación (HU19/HU20) <strong>antes</strong> del Opt-in (HU21).
-        <div class="q-why">Confirmar con el equipo de diseño cuál orden es el correcto, para evitar mostrar datos sensibles antes de validar consentimiento.</div>
-      </li>
-      <li>
         Ninguna HU referencia explícitamente el flag técnico <code>Bandera_auth_CRM_Xapi</code> del diagrama, que decide si la fuente usada es CRM o Xapi.
         <div class="q-why">Se sugiere trazarlo en HU19/HU20 para que la documentación de negocio y el diagrama técnico queden ligados.</div>
+      </li>
+      <li>
+        En HU22/HU23, cuando el cliente reintenta la identificación (máx. 3 intentos), ¿el reintento reenvía el mismo dato (corrección de formato) o el cliente puede proporcionar un número/correo distinto?
+      </li>
+      <li>
+        En HU28/HU28.1, dado que el nodo aparece en el diagrama después de HU27 (Transferir a ejecutivo humano), ¿la consulta a Perfil Unificado/Xapi Profile la ejecuta el agente conversacional (Agentforce) antes de completar el handoff, o el ejecutivo humano desde su propia consola después de recibir el Case?
       </li>
     </ul>
   </div>

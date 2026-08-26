@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimación de Consumo — Agente Consulta de Pickup / Transporte Programado</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #f8f9fa;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 3rem;
+        }
+        h1 {
+            font-size: 1.6rem;
+            color: #032d60;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 1rem;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #032d60;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h3 {
+            font-size: 1rem;
+            color: #1b5e20;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        th {
+            background: #032d60;
+            color: #fff;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        tr:hover td {
+            background: #f0f7ff;
+        }
+        .summary-table th {
+            background: #1b5e20;
+        }
+        .highlight-row td {
+            background: #e8f5e9;
+            font-weight: 600;
+        }
+        .data-table th {
+            background: #4a148c;
+        }
+        .note {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+        .note strong {
+            color: #92400e;
+        }
+        .badge {
+            display: inline-block;
+            background: #032d60;
+            color: #fff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge-dc {
+            background: #4a148c;
+        }
+        .credits {
+            color: #1b5e20;
+            font-weight: 700;
+        }
+        .key-insight {
+            background: #f0f7ff;
+            border: 1px solid #bfdbfe;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .dc-insight {
+            background: #f3e5f5;
+            border: 1px solid #ce93d8;
+        }
+        .section-divider {
+            border: none;
+            border-top: 2px dashed #e5e7eb;
+            margin: 2.5rem 0;
+        }
+        .footer {
+            margin-top: 2.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        .total-box {
+            background: #032d60;
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        .total-box h3 {
+            color: #fff;
+            margin: 0 0 0.75rem 0;
+        }
+        .total-box table {
+            color: #fff;
+        }
+        .total-box th {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .total-box td {
+            border-bottom-color: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .total-box .credits {
+            color: #86efac;
+        }
+        .projection-table th {
+            background: #0d47a1;
+        }
+        .projection-table .highlight-row td {
+            background: #e3f2fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Estimación de Consumo por Interacción</h1>
+        <p class="subtitle">Agente: <strong>Consulta de Pickup / Transporte Programado</strong> &nbsp; <span class="badge">Agentforce</span> &nbsp; <span class="badge badge-dc">Data Cloud</span><br>Cliente: Xcaret</p>
+
+        <!-- SECTION 1: AGENTFORCE ACTIONS -->
+        <h2>1. Consumo de Acciones Agentforce</h2>
+
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Escenario</th>
+                    <th>Acciones</th>
+                    <th>Créditos (prod)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Camino feliz — Reserva encontrada con pickup</td>
+                    <td>7–8</td>
+                    <td class="credits">140–160</td>
+                </tr>
+                <tr>
+                    <td>Reserva no localizada / sin pickup asociado</td>
+                    <td>9–10</td>
+                    <td class="credits">180–200</td>
+                </tr>
+                <tr>
+                    <td>Transferencia a humano</td>
+                    <td>11–12</td>
+                    <td class="credits">220–240</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td>Estimación ponderada</td>
+                    <td>~8</td>
+                    <td class="credits">~160</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            <strong>Tasa de conversión:</strong> 20 créditos por acción en producción, 16 créditos por acción en sandbox.
+        </div>
+
+        <h3>Path A — Camino Feliz: Reserva con pickup encontrada (7–8 acciones)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Acción</th>
+                    <th>HUs que cubre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Detectar intención de confirmación de pickup/transporte</td>
+                    <td>HU 62</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Validar autenticación del cliente</td>
+                    <td>HU 63</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Solicitar/confirmar datos de reserva para búsqueda</td>
+                    <td>HU 64</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Consultar reservas activas asociadas al cliente</td>
+                    <td>HU 65</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Mostrar fecha y detalle del servicio pickup programado</td>
+                    <td>HU 66</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Mantener contexto conversacional (preguntas de seguimiento)</td>
+                    <td>HU 68</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Registrar historial de consulta de pickup</td>
+                    <td>HU 71</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Path B — Reserva no localizada / Sin pickup asociado (9–10 acciones)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Acción</th>
+                    <th>HUs que cubre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1–4</td>
+                    <td>Pasos 1–4 del Path A (detección, auth, datos, consulta)</td>
+                    <td>HU 62–65</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Informar al cliente que no se encontró reserva/pickup</td>
+                    <td>HU 69</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Ofrecer opciones: verificar datos, buscar con otros datos, orientación general</td>
+                    <td>HU 69</td>
+                </tr>
+                <tr>
+                    <td>7–8</td>
+                    <td>Reintento de búsqueda con datos alternativos</td>
+                    <td>HU 64 + HU 65</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Mantener contexto conversacional</td>
+                    <td>HU 68</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Registrar historial de consulta</td>
+                    <td>HU 71</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Path C — Transferencia a humano (11–12 acciones)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Acción</th>
+                    <th>HUs que cubre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1–8</td>
+                    <td>Pasos del Path B (intento de resolución sin éxito)</td>
+                    <td>HU 62–65, HU 69</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Transferencia contextual a ejecutivo humano</td>
+                    <td>HU 72</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Crear caso (solo cuando existe transferencia o gestión humana)</td>
+                    <td>HU 70</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>Mantener contexto para el traspaso</td>
+                    <td>HU 68</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Registrar historial completo de la consulta</td>
+                    <td>HU 71</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 2: DATA CLOUD QUERIES -->
+        <h2>2. Consumo de Data Cloud (Queries)</h2>
+
+        <p style="font-size: 0.9rem; margin-bottom: 1rem;">Las consultas a Data Cloud se generan para resolución de identidad, perfil unificado del cliente y búsqueda de reservas/servicios de transporte.</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Query</th>
+                    <th>Cuándo ocurre</th>
+                    <th>Paso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Resolución de identidad del cliente</td>
+                    <td>Validación de autenticación — identificar al cliente unificado</td>
+                    <td>Paso 2</td>
+                </tr>
+                <tr>
+                    <td>Consulta de perfil unificado</td>
+                    <td>Obtener datos consolidados del cliente (contacto, historial)</td>
+                    <td>Paso 2</td>
+                </tr>
+                <tr>
+                    <td>Búsqueda de reservas activas</td>
+                    <td>Query a objeto de reservas filtrado por cliente</td>
+                    <td>Paso 4</td>
+                </tr>
+                <tr>
+                    <td>Consulta de servicio de pickup/transporte asociado</td>
+                    <td>Relación Reserva → Servicio de Transporte programado</td>
+                    <td>Paso 4–5</td>
+                </tr>
+                <tr>
+                    <td>Detalle del servicio (fecha, hora, lugar, vehículo)</td>
+                    <td>Información completa del pickup para mostrar al cliente</td>
+                    <td>Paso 5</td>
+                </tr>
+                <tr>
+                    <td>Registro/escritura en historial</td>
+                    <td>Registrar consulta realizada y resultado</td>
+                    <td>Paso 8</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="dc-insight key-insight">
+            <strong>Estimación de queries por interacción:</strong>
+            <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                <li><strong>Path A (camino feliz):</strong> 4–6 queries (identidad + perfil + reservas + pickup + detalle + registro)</li>
+                <li><strong>Path B (no localizada):</strong> 5–8 queries (incluye reintentos de búsqueda con datos alternativos)</li>
+                <li><strong>Path C (transferencia):</strong> 6–9 queries (incluye recuperación de contexto completo para traspaso)</li>
+            </ul>
+            <p style="margin-top: 0.75rem;"><strong>Promedio ponderado:</strong> ~5 queries por conversación</p>
+        </div>
+
+        <div class="note">
+            <strong>Nota:</strong> El consumo de queries depende de la implementación. Si las reservas se consultan directamente vía SOQL a Salesforce CRM (en lugar de Data Cloud), el consumo de queries DC podría reducirse a 2–3 por conversación (solo identidad + perfil). Confirmar con el equipo de arquitectura la fuente de datos de reservas y servicios de transporte.
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 3: TOTAL ESTIMATE -->
+        <div class="total-box">
+            <h3>3. Consumo Total Estimado por Conversación</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Componente</th>
+                        <th>Path A (feliz)</th>
+                        <th>Path B (no encontrada)</th>
+                        <th>Path C (transferencia)</th>
+                        <th>Ponderado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Acciones Agentforce</td>
+                        <td>7–8 (140–160 cr)</td>
+                        <td>9–10 (180–200 cr)</td>
+                        <td>11–12 (220–240 cr)</td>
+                        <td class="credits">~8 (~160 cr)</td>
+                    </tr>
+                    <tr>
+                        <td>Queries Data Cloud</td>
+                        <td>4–6</td>
+                        <td>5–8</td>
+                        <td>6–9</td>
+                        <td class="credits">~5</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 4: PROJECTION -->
+        <h2>4. Proyección Mensual</h2>
+
+        <table class="projection-table">
+            <thead>
+                <tr>
+                    <th>Conversaciones / mes</th>
+                    <th>Créditos Agentforce</th>
+                    <th>Queries Data Cloud (est.)</th>
+                    <th>Total combinado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1,000</td>
+                    <td>~160,000</td>
+                    <td>~5,000</td>
+                    <td class="credits">~165,000</td>
+                </tr>
+                <tr>
+                    <td>5,000</td>
+                    <td>~800,000</td>
+                    <td>~25,000</td>
+                    <td class="credits">~825,000</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td>10,000</td>
+                    <td>~1,600,000</td>
+                    <td>~50,000</td>
+                    <td class="credits">~1,650,000</td>
+                </tr>
+                <tr>
+                    <td>25,000</td>
+                    <td>~4,000,000</td>
+                    <td>~125,000</td>
+                    <td class="credits">~4,125,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 5: LOGIC -->
+        <h2>5. Lógica de Consolidación</h2>
+
+        <div class="key-insight">
+            <strong>Acciones consolidadas:</strong> La consulta de reservas activas y la verificación de pickup/transporte asociado se pueden ejecutar como <strong>un solo Flow</strong> (1 acción), reduciendo el conteo total. De igual forma, el registro de trazabilidad (HU 71) puede consolidarse con la última acción del agente si se implementa como un Flow post-conversación.
+        </div>
+
+        <div class="key-insight dc-insight">
+            <strong>Queries consolidadas:</strong> La resolución de identidad y perfil unificado pueden resolverse en 1 query si el modelo de datos tiene un DMO unificado. La búsqueda de reserva + servicio de transporte asociado puede ser 1 query si existe una relación directa en el modelo.
+        </div>
+
+        <div class="note">
+            <strong>Oportunidad de optimización:</strong> Si se consolidan Flows y queries, el consumo del camino feliz podría reducirse a <strong>5–6 acciones (100–120 créditos)</strong> y <strong>3–4 queries</strong>. Esto requiere validación con el equipo de implementación.
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 6: ASSUMPTIONS -->
+        <h2>6. Supuestos para Estimación Ponderada</h2>
+        <ul style="font-size: 0.9rem; padding-left: 1.5rem; margin-bottom: 1rem;">
+            <li>~70% de conversaciones encuentran reserva con pickup (Path A — camino feliz)</li>
+            <li>~20% de conversaciones no localizan reserva o no tiene pickup asociado (Path B)</li>
+            <li>~10% requieren transferencia a ejecutivo humano (Path C)</li>
+            <li>Data Cloud se utiliza para resolución de identidad, perfil unificado y consulta de reservas</li>
+            <li>El agente nunca toma acciones de cambio o cancelación; solo informa</li>
+            <li>No se envían comprobantes ni documentos</li>
+            <li>La información mostrada corresponde únicamente a la reserva autenticada</li>
+        </ul>
+
+        <!-- SECTION 7: HU REFERENCE -->
+        <h2>7. Requerimientos Funcionales (Reg6)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descripción</th>
+                    <th>Tipo de consumo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>HU 62</td>
+                    <td>Detectar intención de confirmación de pickup o transporte</td>
+                    <td>Acción</td>
+                </tr>
+                <tr>
+                    <td>HU 63</td>
+                    <td>Validar autenticación antes de mostrar información de reserva</td>
+                    <td>Acción + Query</td>
+                </tr>
+                <tr>
+                    <td>HU 64</td>
+                    <td>Solicitar o confirmar datos de reserva para búsqueda</td>
+                    <td>Acción</td>
+                </tr>
+                <tr>
+                    <td>HU 65</td>
+                    <td>Consultar reservas activas asociadas al cliente</td>
+                    <td>Acción + Query</td>
+                </tr>
+                <tr>
+                    <td>HU 66</td>
+                    <td>Mostrar fecha y detalle del servicio pickup programado</td>
+                    <td>Acción + Query</td>
+                </tr>
+                <tr>
+                    <td>HU 68</td>
+                    <td>Mantener contexto conversacional sobre la reserva consultada</td>
+                    <td>Acción</td>
+                </tr>
+                <tr>
+                    <td>HU 69</td>
+                    <td>Manejo de reserva no localizada o sin pickup asociado</td>
+                    <td>Acción + Query</td>
+                </tr>
+                <tr>
+                    <td>HU 70</td>
+                    <td>Crear caso únicamente cuando exista transferencia o gestión humana</td>
+                    <td>Acción</td>
+                </tr>
+                <tr>
+                    <td>HU 71</td>
+                    <td>Registrar historial de consulta de pickup</td>
+                    <td>Acción + Query</td>
+                </tr>
+                <tr>
+                    <td>HU 72</td>
+                    <td>Transferencia contextual a ejecutivo humano</td>
+                    <td>Acción</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>Documento generado el 12 de agosto de 2026 &bull; Basado en el diagrama de proceso "Consulta de Pickup / Transporte Programado" (Reg6) y tasas de créditos Agentforce vigentes.</p>
+            <p style="margin-top: 0.5rem;"><strong>Acciones pendientes:</strong></p>
+            <ul style="padding-left: 1.5rem; margin-top: 0.25rem;">
+                <li>Confirmar con arquitectura si reservas/servicios de transporte se consultan vía Data Cloud o SOQL directo</li>
+                <li>Validar oportunidades de consolidación de Flows para reducir conteo de acciones</li>
+                <li>Obtener volumetría esperada de conversaciones mensuales para proyección definitiva</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
