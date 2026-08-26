@@ -604,8 +604,8 @@
     <div class="nav-brand">Agentforce · Estimación</div>
     <ul class="nav-tabs">
       <li><button class="active" onclick="showPage('p0',this)">Inicio</button></li>
-      <li><button onclick="showPage('p1',this)">Flujo 1 — Fotografías</button></li>
-      <li><button onclick="showPage('p2',this)">Flujo 2 — Pickup</button></li>
+      <li><button onclick="showPage('p1',this)">Soporte de Fotografías de Visita</button></li>
+      <li><button onclick="showPage('p2',this)">Consulta de Pickup / Transporte Programado</button></li>
       <li><button onclick="showPage('p3',this)">Identificación del Cliente</button></li>
       <li><button onclick="showPage('p5',this)">Seguimiento de Casos</button></li>
       <li><button onclick="showPage('p4',this)">Preguntas Pendientes</button></li>
@@ -680,7 +680,7 @@
   </div>
 
   <div class="callout">
-    <strong>Nota sobre la base de cálculo:</strong> Flujo 1 y Flujo 2 usan el promedio blended confirmado con Nuvalia (% de escenarios).
+    <strong>Nota sobre la base de cálculo:</strong> Soporte de Fotografías de Visita y Consulta de Pickup / Transporte Programado usan el promedio blended confirmado con Nuvalia (% de escenarios).
     Identificación del Cliente y Seguimiento de Casos usan un blended <strong>propuesto</strong> (mismo método, % aún sin confirmar por Nuvalia) —
     ver <em>Preguntas Pendientes</em> para el detalle de lo que falta validar.
   </div>
@@ -720,7 +720,7 @@
 <div id="p1" class="page">
 <div class="page-inner">
 
-  <h1>Flujo 1 — Soporte de Fotografías de Visita</h1>
+  <h1>Soporte de Fotografías de Visita</h1>
   <p class="subtitle">
     <span class="badge">Agentforce</span>
     <span class="badge badge-dc">Data Cloud</span>
@@ -730,7 +730,7 @@
   <!-- DIAGRAM -->
   <div class="diagram-wrap">
     <div class="diagram-container" id="diag1">
-      <img src="Flujos AFD360/flujo1.png" alt="Diagrama Flujo 1 — Soporte Fotografías de Visita">
+      <img src="Flujos AFD360/flujo1.png" alt="Diagrama — Soporte de Fotografías de Visita">
 
       <!-- HU50+51+58: clasificación + query CRM, box superior izquierdo -->
       <div class="hs tip-right" style="left:6%;top:12%;width:18%;height:14%;" data-rows="row-HU50,row-HU51,row-HU58">
@@ -1125,7 +1125,7 @@
   </div>
 
   <details class="anexo">
-    <summary>Anexo — HUs sin costo Agentforce (Flujo 1)</summary>
+    <summary>Anexo — HUs sin costo Agentforce (Soporte de Fotografías de Visita)</summary>
     <div class="anexo-body">
       <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem;">Estas historias de usuario no generan acciones facturables de Agentforce. Se incluyen aquí como referencia de comportamiento del agente.</p>
       <div class="tbl-wrap">
@@ -1207,7 +1207,7 @@
 <div id="p2" class="page">
 <div class="page-inner">
 
-  <h1>Flujo 2 — Consulta de Pickup / Transporte Programado</h1>
+  <h1>Consulta de Pickup / Transporte Programado</h1>
   <p class="subtitle">
     <span class="badge">Agentforce</span>
     <span class="badge badge-dc">Data Cloud</span>
@@ -1216,7 +1216,7 @@
 
   <div class="diagram-wrap">
     <div class="diagram-container" id="diag2">
-      <img src="Flujos AFD360/flujo2.png" alt="Diagrama Flujo 2 — Consulta de Pickup / Transporte">
+      <img src="Flujos AFD360/flujo2.png" alt="Diagrama — Consulta de Pickup / Transporte Programado">
 
       <!-- HU62: clasificación de intención -->
       <div class="hs tip-right" style="left:3%;top:7%;width:12%;height:14%;" data-rows="row-HU62">
@@ -1448,7 +1448,7 @@
       </tr>
       <tr id="row-HU65">
         <td>HU65</td>
-        <td>"Query CRM" significa que el agente consulta el objeto de reservas en Salesforce (SOQL/Flow), no un DMO de Data 360 — mismo tratamiento que HU51 del Flujo 1.</td>
+        <td>"Query CRM" significa que el agente consulta el objeto de reservas en Salesforce (SOQL/Flow), no un DMO de Data 360 — mismo tratamiento que HU51 de Soporte de Fotografías de Visita.</td>
         <td>Consultar reservas activas</td>
         <td>Standard Agent Action (query CRM)</td>
         <td class="cr">20</td><td class="cr">16</td>
@@ -1567,7 +1567,7 @@
   </div>
 
   <details class="anexo">
-    <summary>Anexo — HUs sin costo Agentforce (Flujo 2)</summary>
+    <summary>Anexo — HUs sin costo Agentforce (Consulta de Pickup / Transporte Programado)</summary>
     <div class="anexo-body">
       <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem;">Estas historias de usuario no generan acciones facturables de Agentforce. Se incluyen aquí como referencia de comportamiento del agente.</p>
       <div class="tbl-wrap">
@@ -2765,8 +2765,8 @@
   // ── PAGE 0: RESUMEN GENERAL DE CONSUMO ──
   (function () {
     const FLOW_SUMMARY = [
-      { key: 'f1', label: 'Flujo 1 — Soporte de Fotografías de Visita', basis: 'Blended confirmado: ~50% Camino A · 40% Camino B · 10% escalación', credProd: 60000, credSandbox: 48000, dataCloud: true, dataCloudNote: '~2 cr / millón de filas vía HU53 (solo Camino B)' },
-      { key: 'f2', label: 'Flujo 2 — Consulta de Pickup / Transporte', basis: 'Blended confirmado: 80% Camino A · 20% Camino B', credProd: 64000, credSandbox: 51000, dataCloud: true, dataCloudNote: '~2 cr / millón de filas vía HU63 (ambos caminos)' },
+      { key: 'f1', label: 'Soporte de Fotografías de Visita', basis: 'Blended confirmado: ~50% Camino A · 40% Camino B · 10% escalación', credProd: 60000, credSandbox: 48000, dataCloud: true, dataCloudNote: '~2 cr / millón de filas vía HU53 (solo Camino B)' },
+      { key: 'f2', label: 'Consulta de Pickup / Transporte Programado', basis: 'Blended confirmado: 80% Camino A · 20% Camino B', credProd: 64000, credSandbox: 51000, dataCloud: true, dataCloudNote: '~2 cr / millón de filas vía HU63 (ambos caminos)' },
       { key: 'f3', label: 'Identificación del Cliente (Autenticación y Continuidad)', basis: 'Blended propuesto (~4 acciones): 70% Camino A · 15% Camino B sin Perfil Unificado · 10% Camino B con Perfil Unificado · 5% caso especial — % pendiente de confirmar con Nuvalia', credProd: 78000, credSandbox: 62000, dataCloud: false, dataCloudNote: 'Confirmado: sin cargo de Data Cloud (Perfil Unificado = Xapi Profile, directo a Core CRM)' },
       { key: 'f5', label: 'Seguimiento de Casos o Trámites', basis: 'Blended propuesto (~1 acción): 70% sin escalamiento · 25% con transferencia · 5% caso no localizado — % pendiente de confirmar con Nuvalia; no incluye consultas repetidas por sesión', credProd: 25000, credSandbox: 20000, dataCloud: false, dataCloudNote: 'Sin consumo confirmado de Data Cloud' },
     ];
