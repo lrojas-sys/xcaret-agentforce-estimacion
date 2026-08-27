@@ -87,11 +87,57 @@
       align-items: center;
       letter-spacing: 0.03em;
     }
-    .nav-tabs {
-      display: flex;
-      list-style: none;
-      overflow-x: auto;
+    /* ── NAV DROPDOWN ── */
+    .nav-dropdown {
+      position: relative;
     }
+    .nav-dropdown-toggle {
+      background: none;
+      border: none;
+      color: var(--xc-gold);
+      font-family: 'Salesforce Sans', Arial, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 0 1.25rem;
+      height: 58px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+    .nav-dropdown-toggle:hover { color: #fff; }
+    .nav-dropdown-caret {
+      font-size: 0.75rem;
+      transition: transform .2s;
+    }
+    .nav-dropdown.open .nav-dropdown-caret { transform: rotate(180deg); }
+    .nav-tabs.nav-dropdown-menu {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 320px;
+      background: #001E5B;
+      border: 1px solid rgba(4,225,203,0.3);
+      border-top: 2px solid var(--xc-gold);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      z-index: 200;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity .15s, transform .15s;
+    }
+    .nav-dropdown.open .nav-tabs.nav-dropdown-menu {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .nav-tabs li { width: 100%; }
     .nav-tabs li button {
       background: none;
       border: none;
@@ -99,17 +145,18 @@
       font-family: 'Salesforce Sans', Arial, sans-serif;
       font-size: 0.88rem;
       font-weight: 600;
-      padding: 0 1.25rem;
-      height: 58px;
+      padding: 0.85rem 1.25rem;
+      width: 100%;
+      text-align: left;
       cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: color .2s, border-color .2s;
+      border-left: 3px solid transparent;
+      transition: color .2s, border-color .2s, background .2s;
       white-space: nowrap;
     }
-    .nav-tabs li button:hover { color: #fff; }
+    .nav-tabs li button:hover { color: #fff; background: rgba(4,225,203,0.08); }
     .nav-tabs li button.active {
       color: var(--xc-gold);
-      border-bottom-color: var(--xc-gold);
+      border-left-color: var(--xc-gold);
     }
 
     /* ── PAGES ── */
@@ -161,6 +208,9 @@
     .badge-dc  { background: var(--xc-sky); }
     .badge-diff{ background: var(--xc-earth); }
     .badge-q   { background: var(--xc-forest); }
+
+    /* ── TRIANGLE INDICATORS (impacto: incremento/decremento) ── */
+    .tri { color: #1e8e3e; font-weight: 700; margin-right: 4px; }
 
     /* ── CALLOUT ── */
     .callout {
@@ -602,14 +652,21 @@
 <nav>
   <div class="nav-inner">
     <div class="nav-brand">Agentforce · Estimación</div>
-    <ul class="nav-tabs">
-      <li><button class="active" onclick="showPage('p0',this)">Inicio</button></li>
-      <li><button onclick="showPage('p1',this)">Soporte de Fotografías de Visita</button></li>
-      <li><button onclick="showPage('p2',this)">Consulta de Pickup / Transporte Programado</button></li>
-      <li><button onclick="showPage('p3',this)">Identificación del Cliente</button></li>
-      <li><button onclick="showPage('p5',this)">Seguimiento de Casos</button></li>
-      <li><button onclick="showPage('p4',this)">Preguntas Pendientes</button></li>
-    </ul>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" onclick="toggleNavDropdown(event)" aria-haspopup="true" aria-expanded="false">
+        <span class="nav-dropdown-label">Inicio</span>
+        <span class="nav-dropdown-caret">▾</span>
+      </button>
+      <ul class="nav-tabs nav-dropdown-menu">
+        <li><button class="active" onclick="showPage('p0',this)">Inicio</button></li>
+        <li><button onclick="showPage('p1',this)">Soporte de Fotografías de Visita</button></li>
+        <li><button onclick="showPage('p2',this)">Consulta de Pickup / Transporte Programado</button></li>
+        <li><button onclick="showPage('p3',this)">Identificación del Cliente</button></li>
+        <li><button onclick="showPage('p5',this)">Seguimiento de Casos</button></li>
+        <li><button onclick="showPage('p4',this)">Preguntas Pendientes</button></li>
+        <li><button onclick="showPage('p6',this)">Data Cloud vs. API Custom</button></li>
+      </ul>
+    </div>
     <!-- Logos: Xcaret + Salesforce side by side, same height -->
     <div class="nav-logos">
       <!-- Xcaret logo oficial -->
@@ -1841,14 +1898,14 @@
     <tbody>
       <tr>
         <td><strong>Camino A — Autenticado exitoso + consulta + envío por correo</strong></td>
-        <td>HU19/HU20, HU24, HU25, HU26</td>
+        <td>HU19/HU20, HU24<span class="info-icon" tabindex="0">i<span class="info-tooltip">HU24 (registrar estado, +20 cr) solo aplica cuando sí hubo coincidencia en CRM (Camino A o B1). Si el cliente agota los 3 intentos sin ninguna coincidencia (Camino B2), no hay Contact al cual escribirle ese estado; el detalle del intento queda en el Case que crea HU27.</span></span>, HU25, HU26</td>
         <td>4</td>
         <td class="cr">80</td><td class="cr">64</td>
         <td>—<br><span style="font-size:0.78rem;color:var(--muted);">Sin consulta a Perfil Unificado</span></td>
       </tr>
       <tr>
         <td><strong>Camino B1 — Transferencia con cliente identificado</strong> (Opt-in no válido / Cliente solicita humano)</td>
-        <td>HU19/HU20, HU24, HU27<br>+ opcional HU25, HU28<span style="font-size:0.78rem;color:var(--muted);"> (HU28 pendiente de confirmar — ver nota abajo)</span></td>
+        <td>HU19/HU20, HU24<span class="info-icon" tabindex="0">i<span class="info-tooltip">HU24 (registrar estado, +20 cr) solo aplica cuando sí hubo coincidencia en CRM (Camino A o B1). Si el cliente agota los 3 intentos sin ninguna coincidencia (Camino B2), no hay Contact al cual escribirle ese estado; el detalle del intento queda en el Case que crea HU27.</span></span>, HU27<br>+ opcional HU25, HU28<span class="info-icon" tabindex="0">i<span class="info-tooltip">El extremo alto de B1 (100 cr) depende de que la consulta a Perfil Unificado (HU28) la ejecute Agentforce antes del handoff, en vez del ejecutivo humano después — ver evaluación de HU28 en Path B1 abajo.</span></span></td>
         <td>3–5</td>
         <td class="cr">60–100</td><td class="cr">48–80</td>
         <td>—</td>
@@ -1869,26 +1926,13 @@
       </tr>
       <tr class="hl-green">
         <td><strong>Estimación blended (~4 acciones promedio)</strong></td>
-        <td>Ponderado (propuesto): 70% Camino A · 25% Camino B (B1 + B2) · 5% caso especial</td>
+        <td>Ponderado (propuesto): 70% Camino A · 25% Camino B (B1 + B2) · 5% caso especial<span class="info-icon" tabindex="0">i<span class="info-tooltip">Pendiente de recalcular: el 25% de "Camino B" todavía no está repartido entre B1 (60–100 cr) y B2 (40–80 cr según intentos) — ver Preguntas Pendientes. El cliente confirmó que no utiliza Data 360 para unificación de perfiles, por lo que esa consulta no agrega Data Service Credits.</span></span></td>
         <td>~4</td>
         <td class="cr">~78*</td><td class="cr">~62*</td>
         <td>—<br><span style="font-size:0.78rem;color:var(--muted);">Confirmado: sin cargo de Data Cloud</span></td>
       </tr>
     </tbody>
   </table>
-  </div>
-  <p style="font-size:0.8rem;color:var(--muted);">
-    * Pendiente de recalcular: el 25% de "Camino B" todavía no está repartido entre B1 (cliente identificado, 60–100 cr) y B2 ("No identificado"/Intentos excedidos, 40–80 cr según intentos) —
-    ver <em>Preguntas Pendientes</em>. Además, el extremo alto de B1 (100 cr) depende de que HU28 sea una acción de Agentforce — ver evaluación de HU28 abajo.
-  </p>
-
-  <div class="insight">
-    <strong>Rango de créditos por conversación:</strong>
-    Toda conversación incluye al menos 1 acción de identificación (HU19/HU20). El registro de estado (HU24, +20 cr) solo aplica cuando sí hubo coincidencia en CRM (Camino A o B1) —
-    si el cliente agota los 3 intentos sin ninguna coincidencia (Camino B2), no hay Contact al cual escribirle ese estado; el detalle del intento queda en el Case que crea HU27.
-    A partir de ahí, el costo escala según el desenlace: <strong>40–80 cr</strong> si es "No identificado"/Intentos excedidos (según cuántos intentos con datos distintos), <strong>60 cr</strong> si el cliente identificado pide humano o tiene Opt-in no válido, o si hay atención fuera de horario,
-    <strong>80 cr</strong> si el cliente se autentica y consulta sus productos/reservas, y hasta <strong>100 cr</strong> si además se consulta el Perfil Unificado antes de escalar (sujeto a confirmar quién ejecuta HU28).
-    El cliente confirmó que no utiliza Data 360 para unificación de perfiles, por lo que esa consulta no agrega Data Service Credits — todo el costo es en Flex Credits de Agentforce.
   </div>
 
   <div class="insight">
@@ -2379,7 +2423,7 @@
     <tbody>
       <tr>
         <td><strong>Consulta de estatus exitosa (sin escalamiento)</strong></td>
-        <td>HU40</td>
+        <td>HU40<span class="info-icon" tabindex="0">i<span class="info-tooltip">El flujo no limita cuántas consultas de expediente puede hacer un cliente en la misma sesión. Cada ejecución de HU40 suma 20 cr adicionales; esta estimación usa 1 consulta como supuesto base.</span></span></td>
         <td>1</td>
         <td class="cr">20</td><td class="cr">16</td>
         <td>—</td>
@@ -2392,10 +2436,10 @@
         <td>—</td>
       </tr>
       <tr class="hl-green">
-        <td><strong>Caso no localizado (si HU69 confirma registro separado)</strong></td>
-        <td>HU40 (+ HU69 por confirmar)</td>
-        <td>1 a 2</td>
-        <td class="cr">20 a 40</td><td class="cr">16 a 32</td>
+        <td><strong>Caso no localizado — cliente reintenta con datos distintos o pide transferencia</strong></td>
+        <td>HU40 (×1–N repeticiones) + HU70 opcional (+ HU69 por confirmar)<span class="info-icon" tabindex="0">i<span class="info-tooltip">Ante caso no localizado, HU69 ofrece 4 opciones. "Verificar nuevamente datos" y "buscar con otros datos" repiten HU40 (+20 cr c/u, sin tope de reintentos documentado). "Transferencia a ejecutivo" equivale a HU70 (+20 cr). Solo "orientación general" se asume sin costo (no confirmado que use Knowledge/Data Cloud).</span></span></td>
+        <td>1 a N</td>
+        <td class="cr">20 a N×20 (+20 si transfiere)</td><td class="cr">16 a N×16 (+16 si transfiere)</td>
         <td>—</td>
       </tr>
       <tr class="hl-green">
@@ -2410,16 +2454,9 @@
   </div>
 
   <div class="insight">
-    <strong>Consumo por consulta, no por conversación:</strong>
-    El flujo no limita cuántos casos distintos puede consultar un cliente en la misma sesión.
-    Cada ejecución de HU40 (consultar expediente) suma <strong>20 cr</strong> adicionales, por lo que el consumo real depende del promedio de consultas por conversación.
-    Esta estimación usa <strong>1 consulta</strong> como supuesto base — ajustar con un multiplicador cuando se tenga visibilidad del promedio real.
-  </div>
-
-  <div class="insight">
     <strong>Lógica blended (estimación propuesta, pendiente de confirmar con Nuvalia):</strong>
     Se asume ~70% consulta de estatus exitosa sin escalamiento (1 acción · 20 cr), ~25% consulta con transferencia a ejecutivo (2 acciones · 40 cr)
-    y ~5% caso no localizado (tratado como 1 acción · 20 cr, supuesto conservador — ver <em>Preguntas Pendientes</em>).
+    y ~5% caso no localizado (tratado como 1 acción · 20 cr, supuesto conservador que <strong>no</strong> contempla reintentos con datos distintos — ver icono <em>i</em> en la fila de arriba y <em>Preguntas Pendientes</em>).
     Promedio ponderado: <strong>~1 acción · ~25 créditos prod por conversación</strong> (~20 cr sandbox).
   </div>
 
@@ -2471,10 +2508,30 @@
       <tr><td>1</td><td>Detectar intención y solicitar número de caso</td><td>HU38 + HU39</td><td>—</td></tr>
       <tr><td>2</td><td>Consultar expediente — no se encuentra el caso</td><td>HU40</td><td>—</td></tr>
       <tr><td>3 por confirmar</td><td>Registrar la consulta no localizada (¿escritura separada a Salesforce?)</td><td>HU69</td><td>—</td></tr>
-      <tr><td>4 opcional</td><td>Si el cliente reintenta con otro dato o pide transferencia, repite Path A o B</td><td>HU40 / HU70</td><td>—</td></tr>
     </tbody>
   </table>
   </div>
+
+  <p style="font-size:0.88rem; margin:0.5rem 0 1rem; color:var(--muted);">
+    A partir de aquí, HU69 ofrece 4 opciones al cliente — cada una con una implicación de costo distinta:
+  </p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>Opción ofrecida por HU69</th><th>Acción real</th><th>HUs que cubre</th><th>Costo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Verificar nuevamente datos</td><td>Repite consulta de expediente con el dato corregido</td><td>HU40</td><td class="cr">+20 cr</td></tr>
+      <tr><td>Buscar con otros datos</td><td>Repite consulta de expediente con un dato distinto</td><td>HU40</td><td class="cr">+20 cr</td></tr>
+      <tr><td>Orientación general</td><td>Respuesta conversacional, sin consultar Salesforce (supuesto: no usa Knowledge)</td><td>—</td><td>0 cr</td></tr>
+      <tr><td>Transferencia a ejecutivo</td><td>Crear Case de transferencia con el contexto completo (repite Path B)</td><td>HU72 (0 cr) + HU70</td><td class="cr">+20 cr</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:0.88rem; margin:0.5rem 0 1rem; color:var(--muted);">
+    "Verificar nuevamente datos" y "buscar con otros datos" pueden repetirse varias veces en la misma conversación — el flujo no documenta un tope de reintentos, por lo que el número de veces que se suma HU40 (N) queda abierto — ver <em>Preguntas Pendientes</em>.
+  </p>
 
   <hr class="div">
 
@@ -2707,10 +2764,10 @@
     <h3>Para Nuvalia (arquitectura del agente)</h3>
     <ul class="q-list">
       <li>
-        ¿La búsqueda de información base en HU53 usa Salesforce Knowledge estándar, o está indexada/vectorizada en Data Cloud?
+        Confirmar que la búsqueda de información base en HU53 usa Agentforce Data Library (Data Cloud).
       </li>
       <li>
-        ¿Qué mecanismo se utiliza para la verificación de identidad en HU63: validación directa contra Salesforce CRM, un servicio externo de autenticación/OTP, o Data Cloud Real-Time Profile?
+        Verificación de identidad: consulta directa con CRM vía Xapi y Cognito.
       </li>
       <li>
         ¿Qué % de conversaciones del proceso de Identificación del Cliente termina en cada escenario (autenticación exitosa, transferencia simple, transferencia con Perfil Unificado, atención fuera de horario)?
@@ -2721,16 +2778,15 @@
         <div class="q-why">Mientras se confirma, la página usa una distribución propuesta (70% / 25% / 5%) para calcular un blended de ~25 cr/conv. Pedimos validar o corregir estos porcentajes.</div>
       </li>
       <li>
-        En Seguimiento de Casos (Req4-HU39), ¿la solicitud del número de caso valida solo el formato en memoria de sesión, o también verifica su existencia contra Salesforce antes de continuar?
-        <div class="q-why">Si valida existencia contra Salesforce, la acción con costo ocurriría aquí y no únicamente en la consulta del expediente (Req4-HU40).</div>
-      </li>
-      <li>
         En Seguimiento de Casos (Req4-HU69 vs Req4-HU71), ¿el registro de "consulta no localizada" y el "historial de consulta de caso" son el mismo evento, o son dos escrituras distintas a Salesforce?
         <div class="q-why">Si son eventos distintos, el estimado actual subestimaría el consumo real en ~20 Flex Credits por cada conversación donde el caso no se encuentre; hoy se asume 0 cr como supuesto conservador.</div>
       </li>
       <li>
         ¿Cuál es el promedio real de consultas de expediente (Req4-HU40) por conversación en Seguimiento de Casos?
         <div class="q-why">El flujo no limita cuántos casos puede consultar un cliente en la misma sesión; la proyección mensual hoy usa 1 consulta como supuesto base.</div>
+      </li>
+      <li>
+        En Req4-HU69 (caso no localizado), ¿existe un tope de reintentos cuando el cliente elige "verificar nuevamente datos" o "buscar con otros datos"?
       </li>
     </ul>
   </div>
@@ -2748,10 +2804,6 @@
         <div class="q-why">Falta definir en qué punto del diagrama se resolvería esta ambigüedad, para saber si dispara o no una acción adicional.</div>
       </li>
       <li>
-        Ninguna HU referencia explícitamente el flag técnico <code>Bandera_auth_CRM_Xapi</code> del diagrama, que decide si la fuente usada es CRM o Xapi.
-        <div class="q-why">Se sugiere trazarlo en HU19/HU20 para que la documentación de negocio y el diagrama técnico queden ligados.</div>
-      </li>
-      <li>
         En HU22/HU23, cuando el cliente reintenta la identificación (máx. 3 intentos), ¿el reintento reenvía el mismo dato (corrección de formato) o el cliente puede proporcionar un número/correo distinto?
       </li>
       <li>
@@ -2762,6 +2814,120 @@
 
 </div>
 </div><!-- /p4 -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 6 — DATA CLOUD VS. API CUSTOM (BENEFICIOS, BENCHMARK POSIBLE)
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="p6" class="page">
+<div class="page-inner">
+
+  <h1>Data Cloud vs. API Custom — Identidad del Cliente</h1>
+  <p class="subtitle">
+    <span class="badge badge-dc">Data Cloud</span>
+    Beneficios de resolver la identidad del cliente con Data Cloud en lugar de Apex + una API externa a medida
+  </p>
+
+  <div class="callout">
+    <strong>Benchmark posible — no garantizado.</strong> Las cifras de esta página son indicativas: provienen de benchmarks públicos de la industria y de rangos conservadores observados en implementaciones comparables de Data Cloud. No representan un compromiso contractual ni un resultado garantizado para Xcaret; el resultado real depende del volumen de datos, la calidad de las fuentes y la configuración final.
+  </div>
+
+  <hr class="div">
+
+  <h2>Comparativa por punto</h2>
+
+  <div class="tbl-wrap">
+  <table class="tbl-green">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Punto</th>
+        <th>Reto actual (Apex + API externa)</th>
+        <th>Beneficio de Data Cloud</th>
+        <th>Impacto (benchmark posible)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Velocidad de resolución de identidad</td>
+        <td>La verificación depende de un callout síncrono a la API externa dentro de la transacción del agente, sujeto a los límites de tiempo de Apex.</td>
+        <td>Resuelve identidad en tiempo real con datos precalculados, sin depender de un callout síncrono.</td>
+        <td><span class="tri tri-down">▼</span> tiempo de espera del huésped para ser identificado, de horas a segundos</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Frescura de datos</td>
+        <td>La lógica a medida no reconcilia de forma continua: cada consulta trae el estado del sistema externo solo al momento del callout.</td>
+        <td>Reglas de coincidencia y reconciliación corren de forma continua, manteniendo el perfil siempre actualizado.</td>
+        <td><span class="tri tri-up">▲</span> vigencia de la información del cliente, actualizada de forma continua en lugar de cada 60 minutos a 24 horas</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Escalabilidad en picos de temporada</td>
+        <td>Existe un máximo de llamadas e integraciones por transacción; los picos de tráfico arriesgan errores o tiempos de espera excedidos.</td>
+        <td>La resolución ocurre en la plataforma de datos, sin consumir llamadas ni contar contra límites transaccionales del agente.</td>
+        <td><span class="tri tri-down">▼</span> riesgo de interrupciones del servicio durante picos de temporada alta</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Seguridad de credenciales</td>
+        <td>Requiere gestionar y rotar credenciales de la API externa manualmente, con mayor superficie de exposición si no se aíslan correctamente.</td>
+        <td>No requiere exponer credenciales de terceros para resolver identidad; el acceso se gestiona de forma nativa en la plataforma.</td>
+        <td><span class="tri tri-down">▼</span> exposición a riesgos de seguridad al eliminar el manejo manual de credenciales de terceros</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Enmascaramiento de datos sensibles</td>
+        <td>El enmascaramiento aplicado a la conversación con el agente no necesariamente cubre el tramo de integración con el sistema externo.</td>
+        <td>Los datos permanecen dentro de la plataforma; el enmascaramiento aplica de forma consistente sin un tramo de integración externo adicional.</td>
+        <td><span class="tri tri-up">▲</span> protección consistente de los datos sensibles del huésped en todo el proceso</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Precisión de coincidencia (matching)</td>
+        <td>La lógica de comparación de datos a medida es manual y propensa a falsos positivos/negativos, sin reglas configurables de coincidencia aproximada.</td>
+        <td>Reglas de coincidencia configurables (exacta, aproximada, normalizada) más reconciliación por prioridad de fuente, sin desarrollo a medida.</td>
+        <td><span class="tri tri-up">▲</span> hasta 20% en productividad de los equipos de atención al cliente</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Velocidad de implementación</td>
+        <td>Construir matching, reconciliación y almacenamiento de identidad a medida, más la integración externa, toma varios meses.</td>
+        <td>Despliega resolución de identidad con reglas configurables, sin construir la lógica desde cero.</td>
+        <td><span class="tri tri-down">▼</span> tiempo para ver resultados, de 12–18 meses a 6–12 semanas</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Costo total de propiedad (TCO)</td>
+        <td>Un stack propio requiere infraestructura, herramientas, seguridad/cumplimiento y mantenimiento continuo a lo largo del tiempo.</td>
+        <td>Absorbe mantenimiento, escalado y actualización de reglas de resolución como servicio administrado.</td>
+        <td><span class="tri tri-down">▼</span> costo total de propiedad al evitar construir y mantener una solución interna propia</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td>Unificación de perfil (Customer 360)</td>
+        <td>Cada sistema (reservas, CRM, soporte) mantiene su propia noción de "cliente"; unificarlos a medida requiere lógica de fusión por cada nueva fuente.</td>
+        <td>Perfil unificado nativo que combina todas las fuentes configuradas sin lógica de fusión a medida por fuente.</td>
+        <td><span class="tri tri-up">▲</span> hasta 30–55% en satisfacción y retención de clientes, según casos comparables de la industria</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td>Control de consumo / costo operativo</td>
+        <td>Un diseño de integración mal calibrado (reintentos sin control, cargas completas en vez de incrementales) puede generar costo sin una señal visible hasta la factura.</td>
+        <td>El consumo por resolución de identidad es visible y atribuible a reglas específicas, permitiendo detectar y corregir diseños ineficientes a tiempo.</td>
+        <td><span class="tri tri-down">▼</span> hasta 90%+ en sobrecostos operativos al corregir el diseño de la carga de datos</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout">
+    Referencia adicional de retorno de inversión en casos públicos comparables de la industria: <span class="tri tri-up">▲</span> hasta 2,300%+ de ROI reportado (benchmark posible, no garantizado). Fuente: Salesforce Customer Stories — <a href="https://www.salesforce.com/customer-stories/" target="_blank">salesforce.com/customer-stories</a>.
+  </div>
+
+</div>
+</div><!-- /p6 -->
 
 
 <!-- VISIT COUNTER -->
@@ -2781,7 +2947,27 @@
     document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
+    const label = document.querySelector('.nav-dropdown-label');
+    if (label) label.textContent = btn.textContent;
+    closeNavDropdown();
   }
+
+  function toggleNavDropdown(evt) {
+    evt.stopPropagation();
+    document.querySelector('.nav-dropdown').classList.toggle('open');
+  }
+
+  function closeNavDropdown() {
+    const dd = document.querySelector('.nav-dropdown');
+    if (dd) dd.classList.remove('open');
+  }
+
+  document.addEventListener('click', function (evt) {
+    const dd = document.querySelector('.nav-dropdown');
+    if (dd && dd.classList.contains('open') && !dd.contains(evt.target)) {
+      closeNavDropdown();
+    }
+  });
 
   function goToRow(pageId, rowId) {
     const btn = document.querySelector('.nav-tabs button[onclick*="\'' + pageId + '\'"]');
